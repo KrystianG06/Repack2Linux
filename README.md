@@ -88,6 +88,9 @@ This creates:
 - `dist/Repack2Linux-v1.01-<arch>.AppImage`
 - `dist/Repack2Linux-v1.01-<arch>.AppImage.sha256`
 
+> Note: In AppImage/runtime mode, `Unified SFX Installer (.sh)` export is intentionally disabled.
+> Use `Portable` export in AppImage, or run developer build from repository to generate SFX installer.
+
 ## Typical Workflow
 1. Select game source folder/ISO.
 2. Let R2L detect and apply best profile/preset.

@@ -177,6 +177,30 @@ impl Installer {
             .unwrap_or(false)
     }
 
+    pub fn validate_unified_sfx_environment() -> Result<(), String> {
+        let gui_bin_path = PathBuf::from("target/release/installer_gui");
+        if gui_bin_path.exists() {
+            return Ok(());
+        }
+
+        let cargo_toml = PathBuf::from("Cargo.toml");
+        let gui_source = PathBuf::from("src/bin/installer_gui.rs");
+        let running_from_appimage = std::env::var_os("APPIMAGE").is_some();
+
+        if running_from_appimage || !cargo_toml.exists() || !gui_source.exists() {
+            return Err("Eksport Unified SFX (.sh) jest niedostępny w buildzie runtime/AppImage. Użyj eksportu Portable lub uruchom wersję deweloperską z repozytorium.".to_string());
+        }
+
+        if !Self::check_tool("cargo") {
+            return Err(
+                "Eksport Unified SFX (.sh) wymaga Cargo (rustup) do kompilacji modułu installer_gui."
+                    .to_string(),
+            );
+        }
+
+        Ok(())
+    }
+
     fn scope_subset(scope: ExportScope) -> Option<&'static [&'static str]> {
         match scope {
             ExportScope::Full => None,
@@ -1226,6 +1250,9 @@ echo "Desktop entries created for $GAME_NAME"
                 ));
             }
         }
+
+        Self::validate_unified_sfx_environment()
+            .map_err(|msg| std::io::Error::new(std::io::ErrorKind::Other, msg))?;
 
         let gui_bin_path = PathBuf::from("target/release/installer_gui");
         if !gui_bin_path.exists() {

@@ -2026,6 +2026,14 @@ impl RepackApp {
             return Task::none();
         }
 
+        if self.opt_export_installer {
+            if let Err(msg) = installer::Installer::validate_unified_sfx_environment() {
+                self.logs.push(format!("[ERROR] {}", msg));
+                self.export_status = ExportStatus::Error(msg);
+                return Task::none();
+            }
+        }
+
         self.export_status = ExportStatus::Running("Przygotowywanie plików do eksportu...".into());
         let game_name = self.game_name.clone();
         let source_dir = self.repack_path.clone().unwrap_or_default();
