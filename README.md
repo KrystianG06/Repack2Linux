@@ -78,6 +78,17 @@ cd Repack2Linux-<target>
 ./install_desktop_icon.sh
 ```
 
+## Build AppImage (single-file distribution)
+```bash
+sudo apt install -y appimagetool
+chmod +x build_appimage.sh
+./build_appimage.sh
+```
+
+This creates:
+- `dist/Repack2Linux-v1.01-<arch>.AppImage`
+- `dist/Repack2Linux-v1.01-<arch>.AppImage.sha256`
+
 ## Typical Workflow
 1. Select game source folder/ISO.
 2. Let R2L detect and apply best profile/preset.
