@@ -23,7 +23,7 @@ use ui::theme::{root_background, ACCENT_CYAN, DEEP_DARK, TEXT_DIM};
 
 pub use config::UiMode;
 
-const APP_VERSION: &str = "1.0.2";
+const APP_VERSION: &str = "1.2.0";
 const VERSION_URL: &str =
     "https://raw.githubusercontent.com/KrystianG06/Repack2Linux/main/version.txt";
 const RELEASES_URL: &str = "https://github.com/KrystianG06/Repack2Linux/releases/latest";

@@ -4,7 +4,7 @@
 
 ### ✅ UPDATE CHECKER UX
 - **Startup version probe:** aplikacja sprawdza `version.txt` z repo (`raw.githubusercontent.com`) przy starcie.
-- **In-app banner:** jeśli dostępna jest nowsza wersja niż lokalna (`v1.0.2`), GUI pokazuje żółty baner z przyciskiem `POBIERZ` do strony Releases.
+- **In-app banner:** jeśli dostępna jest nowsza wersja niż lokalna (`v1.2.0`), GUI pokazuje żółty baner z przyciskiem `POBIERZ` do strony Releases.
 - **Quiet failure:** brak sieci lub błąd HTTP nie blokuje aplikacji.
 
 ### ✅ SETTINGS: APP SHORTCUT
