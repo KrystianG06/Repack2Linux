@@ -1,0 +1,28 @@
+# Rust
+/target/
+**/*.rs.bk
+
+# Python/cache (workspace leftovers)
+__pycache__/
+**/__pycache__/
+*.pyc
+*.pyo
+
+# Secrets / local env
+.env
+.env.*
+*.pem
+*.key
+*.p12
+*.pfx
+
+# Logs/temp
+*.log
+*.tmp
+*.swp
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/

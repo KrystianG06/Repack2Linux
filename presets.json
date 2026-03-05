@@ -1,0 +1,63 @@
+[
+  {
+    "dxvk": true,
+    "id": "cyberpunk-2077",
+    "is_64bit": true,
+    "name": "Cyberpunk 2077",
+    "proton": "GE-Proton",
+    "vcrun": true,
+    "xaudio": false
+  },
+  {
+    "dxvk": true,
+    "id": "gta-v",
+    "is_64bit": true,
+    "name": "Grand Theft Auto V",
+    "proton": "GE-Proton",
+    "vcrun": true,
+    "xaudio": false
+  },
+  {
+    "dxvk": false,
+    "id": "city-car-driving",
+    "is_64bit": false,
+    "name": "City Car Driving",
+    "proton": "System Wine (Default)",
+    "vcrun": true,
+    "xaudio": true
+  },
+  {
+    "d3dx9": false,
+    "dxvk": true,
+    "id": "my summer car",
+    "is_64bit": true,
+    "name": "My Summer Car",
+    "physx": false,
+    "preferred_exe": "mysummercar.exe",
+    "proton": "System Wine (Default)",
+    "source": "community_learned",
+    "updated_at": "2026-03-05T11:44:41.753355660+00:00",
+    "vcrun": true,
+    "vcrun2005": false,
+    "vcrun2008": false,
+    "xact": false,
+    "xaudio": true
+  },
+  {
+    "d3dx9": true,
+    "dxvk": true,
+    "id": "ninja gaiden ragebound",
+    "is_64bit": true,
+    "name": "NINJA GAIDEN Ragebound",
+    "physx": false,
+    "preferred_exe": "NINJA GAIDEN Ragebound.exe",
+    "proton": "System Wine (Default)",
+    "source": "community_learned",
+    "updated_at": "2026-03-05T14:52:04.294965117+00:00",
+    "vcrun": true,
+    "vcrun2005": false,
+    "vcrun2008": false,
+    "xact": false,
+    "xaudio": true
+  }
+]

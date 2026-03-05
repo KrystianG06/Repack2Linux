@@ -1,0 +1,1062 @@
+{
+  "games": [
+    {
+      "game_name": "Cyberpunk 2077",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Cyberpunk2077.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "The Witcher 3: Wild Hunt",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "witcher3.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "The Witcher 2: Assassins of Kings Enhanced Edition",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "witcher2.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "The Witcher Enhanced Edition",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "witcher.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Grand Theft Auto V",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "PlayGTAV.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Grand Theft Auto IV: Complete Edition",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "GTAIV.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Grand Theft Auto: San Andreas",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "gta_sa.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Grand Theft Auto: Vice City",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": true,
+      "preferred_exe": "gta-vc.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Grand Theft Auto III",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": true,
+      "preferred_exe": "gta3.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Red Dead Redemption 2",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "RDR2.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Max Payne 3",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "MaxPayne3.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "L.A. Noire",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "LANoire.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Bully: Scholarship Edition",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": true,
+      "preferred_exe": "Bully.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Elden Ring",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "eldenring.exe",
+      "recommended_proton": "Proton Hotfix"
+    },
+    {
+      "game_name": "DARK SOULS III",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "DarkSoulsIII.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "DARK SOULS II: Scholar of the First Sin",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "DarkSoulsII.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "DARK SOULS: REMASTERED",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "DarkSoulsRemastered.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Sekiro: Shadows Die Twice",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "sekiro.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Armored Core VI: Fires of Rubicon",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "armoredcore6.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Nioh 2 – The Complete Edition",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "nioh2.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Nioh: Complete Edition",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "nioh.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Lies of P",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "LOP.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Resident Evil 2",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "re2.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Resident Evil 3",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "re3.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Resident Evil 4 (2023)",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "re4.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Resident Evil 7 Biohazard",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "re7.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Resident Evil Village",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "re8.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Devil May Cry 5",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "DevilMayCry5.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Monster Hunter: World",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "MonsterHunterWorld.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Monster Hunter Rise",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "MonsterHunterRise.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Dragon's Dogma 2",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "DD2.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "DOOM (2016)",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "DOOMx64vk.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "DOOM Eternal",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "DOOMEternalx64vk.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Wolfenstein II: The New Colossus",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "NewColossus_x64vk.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Wolfenstein: Youngblood",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Youngblood_x64vk.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Quake Champions",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "QuakeChampions.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "The Elder Scrolls V: Skyrim Special Edition",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "SkyrimSE.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "The Elder Scrolls V: Skyrim",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "TESV.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Fallout 4",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Fallout4.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Fallout: New Vegas",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "FalloutNV.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Fallout 3",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Fallout3.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Starfield",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Starfield.exe",
+      "recommended_proton": "Proton Hotfix"
+    },
+    {
+      "game_name": "The Elder Scrolls IV: Oblivion",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Oblivion.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Dishonored",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Dishonored.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Dishonored 2",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Dishonored2.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Deathloop",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Deathloop.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Prey (2017)",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Prey.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Control Ultimate Edition",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Control_DX12.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Alan Wake",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "AlanWake.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Alan Wake 2",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "AlanWake2.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Quantum Break",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "QuantumBreak.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Max Payne",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": true,
+      "preferred_exe": "MaxPayne.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Max Payne 2: The Fall of Max Payne",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": true,
+      "preferred_exe": "MaxPayne2.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Horizon Zero Dawn Complete Edition",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "HorizonZeroDawn.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Days Gone",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "DaysGone.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "God of War",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "GoW.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Marvel's Spider-Man Remastered",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Spider-Man.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Marvel's Spider-Man: Miles Morales",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "MilesMorales.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Uncharted: Legacy of Thieves Collection",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "u4.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Ratchet & Clank: Rift Apart",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "riftapart.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Ghost of Tsushima DIRECTOR'S CUT",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "GoT.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "The Last of Us Part I",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "tlou-i.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Forza Horizon 4",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "ForzaHorizon4.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Forza Horizon 5",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "ForzaHorizon5.exe",
+      "recommended_proton": "Proton Hotfix"
+    },
+    {
+      "game_name": "Need for Speed: Most Wanted (2005)",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": false,
+      "preferred_exe": "speed.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Need for Speed Heat",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "NeedForSpeedHeat.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Need for Speed Unbound",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "NFSUnbound.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Burnout Paradise Remastered",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "BurnoutParadiseRemastered.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Euro Truck Simulator 2",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": false,
+      "needs_xaudio": false,
+      "preferred_exe": "eurotrucks2.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "American Truck Simulator",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": false,
+      "needs_xaudio": false,
+      "preferred_exe": "amtrucks.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "SnowRunner",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "SnowRunner.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Dirt Rally 2.0",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "drt.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "F1 23",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "F1_23.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Cities: Skylines",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "Cities.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Cities: Skylines II",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "Cities2.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Civilization VI",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "CivilizationVI.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Age of Empires II: Definitive Edition",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "AoE2DE_s.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Age of Empires IV",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "RelicCardinal_ws.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Total War: WARHAMMER III",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "Warhammer3.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Company of Heroes 2",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "RelicCoH2.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Crusader Kings III",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "ck3.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Hearts of Iron IV",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "hoi4.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Stellaris",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "stellaris.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Europa Universalis IV",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "eu4.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Victoria 3",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "victoria3.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Mount & Blade II: Bannerlord",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "Bannerlord.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Kingdom Come: Deliverance",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "KingdomCome.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "S.T.A.L.K.E.R.: Shadow of Chernobyl",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": true,
+      "preferred_exe": "XR_3DA.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "S.T.A.L.K.E.R.: Call of Pripyat",
+      "is_64bit": false,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": true,
+      "preferred_exe": "XR_3DA.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "S.T.A.L.K.E.R. 2: Heart of Chornobyl",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Stalker2.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Metro 2033 Redux",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "metro2033.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Metro: Last Light Redux",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "metroLL.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Metro Exodus",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "MetroExodus.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Death Stranding Director's Cut",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "ds.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "No Man's Sky",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "NMS.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Valheim",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "valheim.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Palworld",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "Palworld-Win64-Shipping.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Lethal Company",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "Lethal Company.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Baldur's Gate 3",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "bg3_dx11.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Divinity: Original Sin 2",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "EoCApp.exe",
+      "recommended_proton": "GE-Proton8-32"
+    },
+    {
+      "game_name": "Path of Exile",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": false,
+      "preferred_exe": "PathOfExile_x64.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Warframe",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Warframe.x64.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Counter-Strike 2",
+      "is_64bit": true,
+      "needs_dxvk": false,
+      "needs_vcrun": false,
+      "needs_xaudio": false,
+      "preferred_exe": "cs2.exe",
+      "recommended_proton": null
+    },
+    {
+      "game_name": "Apex Legends",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "r5apex.exe",
+      "recommended_proton": "Proton Experimental"
+    },
+    {
+      "game_name": "Battlefield 1",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "bf1.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Battlefield V",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "bfv.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Titanfall 2",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Titanfall2.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Call of Duty: Modern Warfare 2 Campaign Remastered",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "MW2CR.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Diablo IV",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Diablo IV.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "World of Warcraft",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Wow.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Overwatch 2",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Overwatch.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "StarCraft II",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "SC2_x64.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Diablo II: Resurrected",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "D2R.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "Diablo III",
+      "is_64bit": true,
+      "needs_dxvk": true,
+      "needs_vcrun": true,
+      "needs_xaudio": true,
+      "preferred_exe": "Diablo III64.exe",
+      "recommended_proton": "GE-Proton9-25"
+    },
+    {
+      "game_name": "My Summer Car",
+      "is_64bit": true,
+      "needs_d3dx9": false,
+      "needs_dxvk": true,
+      "needs_physx": false,
+      "needs_vcrun": true,
+      "needs_vcrun2005": false,
+      "needs_vcrun2008": false,
+      "needs_xact": false,
+      "needs_xaudio": true,
+      "preferred_exe": "mysummercar.exe",
+      "recommended_proton": "System Wine (Default)",
+      "source": "community_learned",
+      "updated_at": "2026-03-05T11:44:41.767086293+00:00"
+    },
+    {
+      "game_name": "NINJA GAIDEN Ragebound",
+      "is_64bit": true,
+      "needs_d3dx9": true,
+      "needs_dxvk": true,
+      "needs_physx": false,
+      "needs_vcrun": true,
+      "needs_vcrun2005": false,
+      "needs_vcrun2008": false,
+      "needs_xact": false,
+      "needs_xaudio": true,
+      "preferred_exe": "NINJA GAIDEN Ragebound.exe",
+      "recommended_proton": "System Wine (Default)",
+      "source": "community_learned",
+      "updated_at": "2026-03-05T14:52:04.295243584+00:00"
+    }
+  ]
+}
