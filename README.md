@@ -20,11 +20,9 @@ It builds/learns prefix configuration, exports portable artifacts, and ships aut
 - Reliable launch flow for non-technical users.
 
 ## Screenshots
-> Add screenshots in `docs/assets/` and keep names below for clean GitHub rendering.
-
 | Factory | Export | Installer |
 |---|---|---|
-| `docs/assets/factory.png` | `docs/assets/export.png` | `docs/assets/installer.png` |
+| ![Factory](docs/assets/Factory.png) | ![Export](docs/assets/export.png) | ![Installer](docs/assets/installer.png) |
 
 ## Core Features
 | Feature | What it gives you |
