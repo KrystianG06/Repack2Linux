@@ -11,14 +11,17 @@ OUT_DIR="$ROOT_DIR/dist"
 STAGE_DIR="$OUT_DIR/${APP_NAME}-${HOST_TRIPLE}"
 VERSION_TAG="${VERSION_TAG:-v1.01}"
 
-echo "[R2L] Building release binary: $BIN_NAME"
+echo "[R2L] Building release binaries: $BIN_NAME + installer_gui"
 cargo build --release --bin "$BIN_NAME"
+cargo build --release --bin installer_gui
 
 rm -rf "$STAGE_DIR"
 mkdir -p "$STAGE_DIR"
 
 cp "target/release/$BIN_NAME" "$STAGE_DIR/$APP_NAME"
 chmod +x "$STAGE_DIR/$APP_NAME"
+cp "target/release/installer_gui" "$STAGE_DIR/installer_gui"
+chmod +x "$STAGE_DIR/installer_gui"
 
 cp README.md "$STAGE_DIR/README.md"
 cp PROGRESS.md "$STAGE_DIR/PROGRESS.md"

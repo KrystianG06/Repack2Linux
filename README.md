@@ -73,6 +73,12 @@ This creates:
 - `dist/Repack2Linux-v1.01-<target>.tar.gz`
 - `dist/Repack2Linux-v1.01-<target>.sha256`
 
+Release package includes both runtime binaries:
+- `Repack2Linux`
+- `installer_gui`
+
+So `Unified SFX Installer (.sh)` export works in release runtime too (without local Cargo project sources).
+
 After extracting the archive, install app icon/menu entry:
 ```bash
 cd Repack2Linux-<target>

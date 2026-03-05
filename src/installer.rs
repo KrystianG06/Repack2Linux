@@ -178,8 +178,7 @@ impl Installer {
     }
 
     pub fn validate_unified_sfx_environment() -> Result<(), String> {
-        let gui_bin_path = PathBuf::from("target/release/installer_gui");
-        if gui_bin_path.exists() {
+        if Self::resolve_installer_gui_binary().is_some() {
             return Ok(());
         }
 
@@ -199,6 +198,35 @@ impl Installer {
         }
 
         Ok(())
+    }
+
+    fn resolve_installer_gui_binary() -> Option<PathBuf> {
+        if let Ok(custom) = std::env::var("R2L_INSTALLER_GUI_BIN") {
+            let p = PathBuf::from(custom);
+            if p.exists() {
+                return Some(p);
+            }
+        }
+
+        let local_target = PathBuf::from("target/release/installer_gui");
+        if local_target.exists() {
+            return Some(local_target);
+        }
+
+        if let Ok(exe) = std::env::current_exe() {
+            if let Some(dir) = exe.parent() {
+                let alongside = dir.join("installer_gui");
+                if alongside.exists() {
+                    return Some(alongside);
+                }
+                let hidden = dir.join(".r2l").join("installer_gui");
+                if hidden.exists() {
+                    return Some(hidden);
+                }
+            }
+        }
+
+        None
     }
 
     fn scope_subset(scope: ExportScope) -> Option<&'static [&'static str]> {
@@ -1254,8 +1282,8 @@ echo "Desktop entries created for $GAME_NAME"
         Self::validate_unified_sfx_environment()
             .map_err(|msg| std::io::Error::new(std::io::ErrorKind::Other, msg))?;
 
-        let gui_bin_path = PathBuf::from("target/release/installer_gui");
-        if !gui_bin_path.exists() {
+        let mut gui_bin_path = Self::resolve_installer_gui_binary();
+        if gui_bin_path.is_none() {
             let status = Command::new("cargo")
                 .arg("build")
                 .arg("--release")
@@ -1269,7 +1297,14 @@ echo "Desktop entries created for $GAME_NAME"
                     "Failed to compile installer GUI",
                 ));
             }
+            gui_bin_path = Self::resolve_installer_gui_binary();
         }
+        let gui_bin_path = gui_bin_path.ok_or_else(|| {
+            std::io::Error::new(
+                std::io::ErrorKind::Other,
+                "Installer GUI binary not found after build.",
+            )
+        })?;
 
         let total_size_bytes = Self::get_dir_size(portable_dir).await?;
         let total_size_mb = total_size_bytes / 1024 / 1024;
@@ -1301,7 +1336,7 @@ R2L_GUI_BIN_START
 
         let mut out_file = tokio::fs::File::create(output_sh).await?;
         out_file.write_all(header.as_bytes()).await?;
-        let gui_bytes = tokio::fs::read(&gui_bin_path).await?;
+        let gui_bytes = tokio::fs::read(gui_bin_path).await?;
         out_file.write_all(&gui_bytes).await?;
         out_file.write_all(b"\nR2L_DATA_BIN_START\n").await?;
 
