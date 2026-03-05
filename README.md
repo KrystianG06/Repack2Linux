@@ -3,7 +3,7 @@
 Portable game factory for Linux: build once, launch anywhere.
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-v1.01-1f6feb">
+  <img alt="Version" src="https://img.shields.io/badge/version-v1.0.2-1f6feb">
   <img alt="Platform" src="https://img.shields.io/badge/platform-Linux-0a0a0a">
   <img alt="Status" src="https://img.shields.io/badge/status-stable-1f883d">
   <img alt="Engine" src="https://img.shields.io/badge/engine-Wine%20%2B%20Proton-8b5cf6">
@@ -70,8 +70,8 @@ chmod +x build_release.sh
 ```
 
 This creates:
-- `dist/Repack2Linux-v1.01-<target>.tar.gz`
-- `dist/Repack2Linux-v1.01-<target>.sha256`
+- `dist/Repack2Linux-v1.0.2-<target>.tar.gz`
+- `dist/Repack2Linux-v1.0.2-<target>.sha256`
 
 Release package includes both runtime binaries:
 - `Repack2Linux`
@@ -92,8 +92,8 @@ chmod +x build_appimage.sh
 ```
 
 This creates:
-- `dist/Repack2Linux-v1.01-<arch>.AppImage`
-- `dist/Repack2Linux-v1.01-<arch>.AppImage.sha256`
+- `dist/Repack2Linux-v1.0.2-<arch>.AppImage`
+- `dist/Repack2Linux-v1.0.2-<arch>.AppImage.sha256`
 
 > Note: In AppImage/runtime mode, `Unified SFX Installer (.sh)` export is intentionally disabled.
 > Use `Portable` export in AppImage, or run developer build from repository to generate SFX installer.

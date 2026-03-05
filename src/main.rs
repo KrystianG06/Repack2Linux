@@ -23,13 +23,17 @@ use ui::theme::{root_background, ACCENT_CYAN, DEEP_DARK, TEXT_DIM};
 
 pub use config::UiMode;
 
-const APP_VERSION: &str = "1.01";
+const APP_VERSION: &str = "1.0.2";
 const VERSION_URL: &str =
     "https://raw.githubusercontent.com/KrystianG06/Repack2Linux/main/version.txt";
 const RELEASES_URL: &str = "https://github.com/KrystianG06/Repack2Linux/releases/latest";
 
 pub fn main() -> iced::Result {
-    iced::application("Repack2Linux v1.01", RepackApp::update, RepackApp::view)
+    iced::application(
+        |_state: &RepackApp| format!("Repack2Linux v{}", APP_VERSION),
+        RepackApp::update,
+        RepackApp::view,
+    )
         .window(app_window_settings())
         .theme(|_| Theme::Dark)
         .subscription(RepackApp::subscription)
@@ -237,7 +241,7 @@ impl Default for RepackApp {
             dest_path: PathBuf::from(&cfg.default_install_dir),
             game_exe_override: None,
             repack_type: detector::RepackType::Unknown,
-            logs: vec![format!("R2L Engine v1.01: ONLINE. GPU: {}", gpu)],
+            logs: vec![format!("R2L Engine v{}: ONLINE. GPU: {}", APP_VERSION, gpu)],
             progress: 0.0,
             current_tab: Tab::Factory,
             cfg,
@@ -2505,7 +2509,7 @@ impl RepackApp {
                     .color(TEXT_DIM),
                 ])
                 .padding(10),
-                container(text("v1.01").size(9).color(TEXT_DIM)).padding(10)
+                container(text(format!("v{}", APP_VERSION)).size(9).color(TEXT_DIM)).padding(10)
             ]
             .spacing(16)
             .align_x(Alignment::Start),
