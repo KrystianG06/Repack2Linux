@@ -907,6 +907,11 @@ pub fn main() {
 fn installer_window_settings() -> window::Settings {
     window::Settings {
         icon: installer_window_icon(),
+        #[cfg(target_os = "linux")]
+        platform_specific: window::settings::PlatformSpecific {
+            application_id: "repack2linux-installer".to_string(),
+            ..Default::default()
+        },
         ..window::Settings::default()
     }
 }

@@ -42,6 +42,11 @@ pub fn main() -> iced::Result {
 fn app_window_settings() -> window::Settings {
     window::Settings {
         icon: app_window_icon(),
+        #[cfg(target_os = "linux")]
+        platform_specific: window::settings::PlatformSpecific {
+            application_id: "repack2linux".to_string(),
+            ..Default::default()
+        },
         ..window::Settings::default()
     }
 }
@@ -404,13 +409,13 @@ impl RepackApp {
 
         let icons_dir = PathBuf::from(&home).join(".local/share/icons/hicolor/scalable/apps");
         let applications_dir = PathBuf::from(&home).join(".local/share/applications");
-        let icon_path = icons_dir.join("repack2linux-rs.svg");
-        let desktop_path = applications_dir.join("repack2linux-rs.desktop");
+        let icon_path = icons_dir.join("repack2linux.svg");
+        let desktop_path = applications_dir.join("repack2linux.desktop");
 
         let exe = std::env::current_exe()
             .ok()
             .map(|p| p.to_string_lossy().to_string())
-            .unwrap_or_else(|| "repack2linux-rs".to_string());
+            .unwrap_or_else(|| "repack2linux".to_string());
 
         let desktop_content = format!(
             "[Desktop Entry]\nVersion=1.0\nType=Application\nName=Repack2Linux\nExec=\"{}\"\nIcon={}\nTerminal=false\nCategories=Game;Utility;\nStartupNotify=true\n",
@@ -423,6 +428,8 @@ impl RepackApp {
             && std::fs::write(&icon_path, icon_svg).is_ok()
             && std::fs::write(&desktop_path, desktop_content).is_ok()
         {
+            let _ = std::fs::remove_file(applications_dir.join("repack2linux-rs.desktop"));
+            let _ = std::fs::remove_file(icons_dir.join("repack2linux-rs.svg"));
             #[cfg(unix)]
             {
                 use std::os::unix::fs::PermissionsExt;
