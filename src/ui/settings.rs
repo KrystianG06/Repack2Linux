@@ -88,6 +88,17 @@ pub fn view_settings(app: &RepackApp) -> Element<'_, Message> {
                         app.cfg.welcome_animation_enabled
                     )
                     .on_toggle(Message::ToggleWelcomeAnimation),
+                    Space::with_height(14),
+                    text(app.tr("settings_shortcut_title"))
+                        .size(12)
+                        .font(font_bold()),
+                    text(app.tr("settings_shortcut_desc"))
+                        .size(11)
+                        .color(TEXT_DIM),
+                    button(text(app.tr("settings_add_shortcut_btn")).size(11))
+                        .on_press(Message::InstallAppShortcutPressed)
+                        .style(|t, s| crate::ui::theme::brand_button_style(t, s, true))
+                        .width(Length::Fill),
                     Space::with_height(20),
                     text(app.tr("cloud_knowledge")).size(12).font(font_bold()),
                     button(text(app.tr("sync_now")).size(11))

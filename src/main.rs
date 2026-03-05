@@ -23,6 +23,11 @@ use ui::theme::{root_background, ACCENT_CYAN, DEEP_DARK, TEXT_DIM};
 
 pub use config::UiMode;
 
+const APP_VERSION: &str = "1.01";
+const VERSION_URL: &str =
+    "https://raw.githubusercontent.com/KrystianG06/Repack2Linux/main/version.txt";
+const RELEASES_URL: &str = "https://github.com/KrystianG06/Repack2Linux/releases/latest";
+
 pub fn main() -> iced::Result {
     iced::application("Repack2Linux v1.01", RepackApp::update, RepackApp::view)
         .window(app_window_settings())
@@ -34,6 +39,7 @@ pub fn main() -> iced::Result {
                 Task::batch(vec![
                     Task::done(Message::SyncCloudDatabase),
                     Task::done(Message::ProcessCommunityQueue),
+                    Task::done(Message::CheckForUpdates),
                 ]),
             )
         })
@@ -175,6 +181,7 @@ pub struct RepackApp {
     pub community_repo_root: Option<String>,
     pub community_remote_enabled: bool,
     pub show_welcome_overlay: bool,
+    pub available_update: Option<String>,
 }
 
 #[derive(Debug, Default, PartialEq, Clone, Copy)]
@@ -194,7 +201,7 @@ impl std::fmt::Display for FactoryMode {
 impl Default for RepackApp {
     fn default() -> Self {
         let mut cfg = config::ConfigManager::load();
-        Self::ensure_app_shortcut(&mut cfg);
+        let _ = Self::ensure_app_shortcut(&mut cfg);
         let lang = if cfg.language.contains("Polish") {
             Language::Polish
         } else {
@@ -289,6 +296,7 @@ impl Default for RepackApp {
             community_repo_root: queue_snapshot.repo_root,
             community_remote_enabled: queue_snapshot.remote_enabled,
             show_welcome_overlay,
+            available_update: None,
         }
     }
 }
@@ -377,6 +385,11 @@ pub enum Message {
     ProcessCommunityQueue,
     CommunityQueueProcessed(Result<String, String>),
     CommunitySyncFinished(Result<String, String>),
+    CheckForUpdates,
+    UpdateCheckFinished(Result<Option<String>, String>),
+    OpenReleasesPage,
+    DismissUpdateBanner,
+    InstallAppShortcutPressed,
     DismissWelcomePressed,
     ToggleWelcomeAnimation(bool),
     ToggleWelcomeScreen(bool),
@@ -387,10 +400,10 @@ pub enum Message {
 }
 
 impl RepackApp {
-    fn ensure_app_shortcut(cfg: &mut config::AppConfig) {
+    fn ensure_app_shortcut(cfg: &mut config::AppConfig) -> Result<(), String> {
         let home = std::env::var("HOME").unwrap_or_default();
         if home.is_empty() {
-            return;
+            return Err("HOME is empty".into());
         }
 
         let icon_svg = r###"<?xml version="1.0" encoding="UTF-8"?>
@@ -409,8 +422,10 @@ impl RepackApp {
 
         let icons_dir = PathBuf::from(&home).join(".local/share/icons/hicolor/scalable/apps");
         let applications_dir = PathBuf::from(&home).join(".local/share/applications");
+        let desktop_dir = Self::resolve_desktop_dir(&home);
         let icon_path = icons_dir.join("repack2linux.svg");
         let desktop_path = applications_dir.join("repack2linux.desktop");
+        let desktop_shortcut_path = desktop_dir.join("Repack2Linux.desktop");
 
         let exe = std::env::current_exe()
             .ok()
@@ -418,30 +433,49 @@ impl RepackApp {
             .unwrap_or_else(|| "repack2linux".to_string());
 
         let desktop_content = format!(
-            "[Desktop Entry]\nVersion=1.0\nType=Application\nName=Repack2Linux\nExec=\"{}\"\nIcon={}\nTerminal=false\nCategories=Game;Utility;\nStartupNotify=true\n",
+            "[Desktop Entry]\nVersion=1.0\nType=Application\nName=Repack2Linux\nExec=\"{}\"\nIcon={}\nTerminal=false\nCategories=Game;Utility;\nStartupNotify=true\nStartupWMClass=repack2linux\n",
             exe,
             icon_path.display()
         );
 
-        if std::fs::create_dir_all(&icons_dir).is_ok()
-            && std::fs::create_dir_all(&applications_dir).is_ok()
-            && std::fs::write(&icon_path, icon_svg).is_ok()
-            && std::fs::write(&desktop_path, desktop_content).is_ok()
+        std::fs::create_dir_all(&icons_dir).map_err(|e| e.to_string())?;
+        std::fs::create_dir_all(&applications_dir).map_err(|e| e.to_string())?;
+        std::fs::create_dir_all(&desktop_dir).map_err(|e| e.to_string())?;
+        std::fs::write(&icon_path, icon_svg).map_err(|e| e.to_string())?;
+        std::fs::write(&desktop_path, &desktop_content).map_err(|e| e.to_string())?;
+        std::fs::write(&desktop_shortcut_path, &desktop_content).map_err(|e| e.to_string())?;
+
+        let _ = std::fs::remove_file(applications_dir.join("repack2linux-rs.desktop"));
+        let _ = std::fs::remove_file(icons_dir.join("repack2linux-rs.svg"));
+        #[cfg(unix)]
         {
-            let _ = std::fs::remove_file(applications_dir.join("repack2linux-rs.desktop"));
-            let _ = std::fs::remove_file(icons_dir.join("repack2linux-rs.svg"));
-            #[cfg(unix)]
-            {
-                use std::os::unix::fs::PermissionsExt;
-                if let Ok(meta) = std::fs::metadata(&desktop_path) {
+            use std::os::unix::fs::PermissionsExt;
+            for target in [&desktop_path, &desktop_shortcut_path] {
+                if let Ok(meta) = std::fs::metadata(target) {
                     let mut perms = meta.permissions();
                     perms.set_mode(0o755);
-                    let _ = std::fs::set_permissions(&desktop_path, perms);
+                    let _ = std::fs::set_permissions(target, perms);
                 }
             }
-            cfg.app_shortcut_installed = true;
-            let _ = config::ConfigManager::save(cfg);
         }
+        cfg.app_shortcut_installed = true;
+        let _ = config::ConfigManager::save(cfg);
+        Ok(())
+    }
+
+    fn resolve_desktop_dir(home: &str) -> PathBuf {
+        let out = std::process::Command::new("xdg-user-dir")
+            .arg("DESKTOP")
+            .output();
+        if let Ok(out) = out {
+            if out.status.success() {
+                let candidate = String::from_utf8_lossy(&out.stdout).trim().to_string();
+                if !candidate.is_empty() {
+                    return PathBuf::from(candidate);
+                }
+            }
+        }
+        PathBuf::from(home).join("Desktop")
     }
 
     fn detect_gpu() -> String {
@@ -596,6 +630,13 @@ impl RepackApp {
             (Language::Polish, "welcome_animation") => "Włącz animację powitania",
             (Language::Polish, "welcome_screen_setting") => "Pokazuj ekran powitalny przy starcie",
             (Language::Polish, "welcome_start") => "ZACZNIJ KORZYSTAĆ Z R2L",
+            (Language::Polish, "settings_shortcut_title") => "SKRÓT APLIKACJI",
+            (Language::Polish, "settings_shortcut_desc") => "Dodaj skrót Repack2Linux do menu i na pulpit.",
+            (Language::Polish, "settings_add_shortcut_btn") => "DODAJ SKRÓT",
+            (Language::Polish, "update_available_prefix") => "Dostępna nowa wersja",
+            (Language::Polish, "update_available_suffix") => "Pobierz z GitHub",
+            (Language::Polish, "update_download_btn") => "POBIERZ",
+            (Language::Polish, "update_hide_btn") => "UKRYJ",
             (Language::Polish, "export_config_title") => "KONFIGURACJA EKSPORTU",
             (Language::Polish, "export_config_desc") => "Zbuduj samowystarczalną paczkę i sprawdź prefix przed wysyłką",
             (Language::Polish, "export_pack_options") => "OPCJE PAKOWANIA",
@@ -759,6 +800,13 @@ impl RepackApp {
             (_, "welcome_animation") => "Enable welcome animation",
             (_, "welcome_screen_setting") => "Show welcome screen on startup",
             (_, "welcome_start") => "START USING R2L",
+            (_, "settings_shortcut_title") => "APP SHORTCUT",
+            (_, "settings_shortcut_desc") => "Add Repack2Linux shortcut to app menu and desktop.",
+            (_, "settings_add_shortcut_btn") => "ADD SHORTCUT",
+            (_, "update_available_prefix") => "New version available",
+            (_, "update_available_suffix") => "Download from GitHub",
+            (_, "update_download_btn") => "DOWNLOAD",
+            (_, "update_hide_btn") => "HIDE",
             (_, "export_config_title") => "EXPORT CONFIGURATION",
             (_, "export_config_desc") => "Build a self-contained package and verify the prefix before sharing.",
             (_, "export_pack_options") => "PACKAGING OPTIONS",
@@ -939,6 +987,42 @@ impl RepackApp {
             Message::ProcessCommunityQueue => self.handle_process_community_queue(),
             Message::CommunityQueueProcessed(res) => self.handle_community_queue_processed(res),
             Message::CommunitySyncFinished(res) => self.handle_community_sync_finished(res),
+            Message::CheckForUpdates => self.handle_check_for_updates(),
+            Message::UpdateCheckFinished(res) => self.handle_update_check_finished(res),
+            Message::OpenReleasesPage => {
+                if open::that(RELEASES_URL).is_err() {
+                    self.logs
+                        .push("[WARN] Nie udalo sie otworzyc strony releases.".into());
+                }
+                Task::none()
+            }
+            Message::DismissUpdateBanner => {
+                self.available_update = None;
+                Task::none()
+            }
+            Message::InstallAppShortcutPressed => {
+                let result = Self::ensure_app_shortcut(&mut self.cfg);
+                match result {
+                    Ok(()) => self.logs.push(format!(
+                        "[OK] {}",
+                        if self.lang == Language::Polish {
+                            "Skrót aplikacji został dodany do menu i pulpitu."
+                        } else {
+                            "Application shortcut was added to menu and desktop."
+                        }
+                    )),
+                    Err(err) => self.logs.push(format!(
+                        "[WARN] {}: {}",
+                        if self.lang == Language::Polish {
+                            "Nie udalo sie dodac skrotu aplikacji"
+                        } else {
+                            "Failed to add application shortcut"
+                        },
+                        err
+                    )),
+                }
+                Task::none()
+            }
             Message::DismissWelcomePressed => self.handle_dismiss_welcome(),
             Message::ToggleWelcomeAnimation(v) => {
                 self.cfg.welcome_animation_enabled = v;
@@ -1961,6 +2045,77 @@ impl RepackApp {
         Task::none()
     }
 
+    fn handle_check_for_updates(&mut self) -> Task<Message> {
+        Task::perform(
+            async move {
+                let client = reqwest::Client::builder()
+                    .timeout(std::time::Duration::from_secs(4))
+                    .build()
+                    .map_err(|e| format!("http client: {}", e))?;
+                let resp = client
+                    .get(VERSION_URL)
+                    .send()
+                    .await
+                    .map_err(|e| format!("download: {}", e))?;
+                if !resp.status().is_success() {
+                    return Err(format!("status {}", resp.status()));
+                }
+                let remote = resp
+                    .text()
+                    .await
+                    .map_err(|e| format!("read body: {}", e))?
+                    .trim()
+                    .to_string();
+                if remote.is_empty() {
+                    return Ok(None);
+                }
+                if Self::is_remote_version_newer(APP_VERSION, &remote) {
+                    Ok(Some(remote))
+                } else {
+                    Ok(None)
+                }
+            },
+            Message::UpdateCheckFinished,
+        )
+    }
+
+    fn handle_update_check_finished(
+        &mut self,
+        res: Result<Option<String>, String>,
+    ) -> Task<Message> {
+        match res {
+            Ok(Some(v)) => self.available_update = Some(v),
+            Ok(None) => {}
+            Err(_) => {}
+        }
+        Task::none()
+    }
+
+    fn is_remote_version_newer(current: &str, remote: &str) -> bool {
+        fn parse(v: &str) -> Vec<u32> {
+            v.trim()
+                .trim_start_matches(['v', 'V'])
+                .split('.')
+                .map(|p| p.parse::<u32>().unwrap_or(0))
+                .collect()
+        }
+
+        let a = parse(current);
+        let b = parse(remote);
+        let max_len = a.len().max(b.len());
+        for i in 0..max_len {
+            let av = *a.get(i).unwrap_or(&0);
+            let bv = *b.get(i).unwrap_or(&0);
+            if bv > av {
+                return true;
+            }
+            if bv < av {
+                return false;
+            }
+        }
+        false
+    }
+
     fn handle_community_sync_finished(&mut self, res: Result<String, String>) -> Task<Message> {
         match res {
             Ok(msg) => self.logs.push(format!("[COMMUNITY] {}", msg)),
@@ -2363,14 +2518,56 @@ impl RepackApp {
             ..Default::default()
         });
 
-        let main_content = container(match self.current_tab {
+        let tab_content: Element<'_, Message> = match self.current_tab {
             Tab::Factory => ui::factory::view_factory(self),
             Tab::Tools => ui::tools::view_tools(self),
             Tab::Settings => ui::settings::view_settings(self),
-        })
-        .width(Length::Fill)
-        .height(Length::Fill)
-        .padding(32);
+        };
+
+        let content_with_update: Element<'_, Message> =
+            if let Some(version) = &self.available_update {
+                let update_row = container(
+                    row![
+                        text(format!(
+                            "{} v{} - {}",
+                            self.tr("update_available_prefix"),
+                            version,
+                            self.tr("update_available_suffix")
+                        ))
+                        .size(12)
+                        .font(font_bold())
+                        .color(Color::from_rgb(0.22, 0.17, 0.02)),
+                        Space::with_width(Length::Fill),
+                        button(text(self.tr("update_download_btn")).size(11))
+                            .on_press(Message::OpenReleasesPage)
+                            .style(|t, s| ui::theme::brand_button_style(t, s, true)),
+                        button(text(self.tr("update_hide_btn")).size(11))
+                            .on_press(Message::DismissUpdateBanner)
+                            .style(|t, s| ui::theme::brand_button_style(t, s, false)),
+                    ]
+                    .spacing(10)
+                    .align_y(Alignment::Center),
+                )
+                .padding(12)
+                .style(|_| container::Style {
+                    background: Some(Background::Color(Color::from_rgb(0.99, 0.85, 0.28))),
+                    border: Border {
+                        radius: 10.0.into(),
+                        width: 1.0,
+                        color: Color::from_rgb(0.85, 0.66, 0.1),
+                    },
+                    ..Default::default()
+                });
+
+                column![update_row, Space::with_height(10), tab_content].into()
+            } else {
+                tab_content
+            };
+
+        let main_content = container(content_with_update)
+            .width(Length::Fill)
+            .height(Length::Fill)
+            .padding(32);
 
         let content = row![sidebar, main_content].spacing(0);
 

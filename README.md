@@ -35,6 +35,7 @@ It builds/learns prefix configuration, exports portable artifacts, and ships aut
 | Safe fallback | Auto-switches to safe mode when renderer/runtime issues are detected |
 | Isolated runtime | Save/runtime data stays inside package (`./pfx`, `./r2p_userdata`) |
 | Unified `.sh` installer | Optional self-extracting installer with desktop/menu integration |
+| Update checker | Startup check against `version.txt` with in-app banner to latest release |
 
 ## Launch Behavior (User-Friendly)
 - `play_auto.sh` is the recommended entrypoint.
@@ -130,6 +131,9 @@ Inside the package: `./r2p_userdata` (typically `./r2p_userdata/Local`).
 
 **Which launcher should users run?**  
 `./play_auto.sh` (recommended).
+
+**Can I add app shortcut/icon from settings?**  
+Yes. In `Configuration`, use `ADD SHORTCUT` to install/update menu + desktop entry with R2L icon.
 
 **What if a game has black screen?**  
 Auto mode retries safe fallback automatically; manual fallback is `./play_safe.sh`.

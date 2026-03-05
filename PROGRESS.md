@@ -1,5 +1,17 @@
 # Repack2Proton-RS - Progress Report
 
+## Date: 2026-03-05 20:10:00 CET (Update checker + app shortcut UX)
+
+### ✅ UPDATE CHECKER UX
+- **Startup version probe:** aplikacja sprawdza `version.txt` z repo (`raw.githubusercontent.com`) przy starcie.
+- **In-app banner:** jeśli dostępna jest nowsza wersja niż lokalna (`v1.01`), GUI pokazuje żółty baner z przyciskiem `POBIERZ` do strony Releases.
+- **Quiet failure:** brak sieci lub błąd HTTP nie blokuje aplikacji.
+
+### ✅ SETTINGS: APP SHORTCUT
+- **Nowa opcja w Konfiguracji:** przycisk `DODAJ SKRÓT` instaluje/odświeża skrót Repack2Linux.
+- **Desktop + menu parity:** wpis `.desktop` trafia do `~/.local/share/applications` oraz na pulpit użytkownika (z ikoną R2L).
+- **WM class alignment:** `StartupWMClass=repack2linux` dla poprawnego mapowania ikony na dock/pasku.
+
 ## Date: 2026-03-05 18:20:00 CET (Welcome flow, sync messaging, icon cleanup)
 
 ### ✅ UX FIXES (WELCOME + SETTINGS)
