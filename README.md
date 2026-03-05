@@ -57,10 +57,20 @@ presets.json             # Preset knowledge base
 
 ## Quick Start
 ```bash
-git clone https://github.com/KrystianG06/Repack2Proton.git
-cd Repack2Proton/repack2proton-rs
-cargo run
+git clone https://github.com/KrystianG06/Repack2Linux.git
+cd Repack2Linux
+cargo run --bin repack2proton-rs
 ```
+
+## Build Release Asset (for end users)
+```bash
+chmod +x build_release.sh
+./build_release.sh
+```
+
+This creates:
+- `dist/Repack2Linux-v1.01-<target>.tar.gz`
+- `dist/Repack2Linux-v1.01-<target>.sha256`
 
 ## Typical Workflow
 1. Select game source folder/ISO.
