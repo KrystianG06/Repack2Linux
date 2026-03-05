@@ -10,12 +10,28 @@ VERSION_TAG="${VERSION_TAG:-v1.01}"
 ARCH="$(uname -m)"
 OUT_DIR="$ROOT_DIR/dist"
 APPDIR="$OUT_DIR/${APP_NAME}.AppDir"
+TOOLS_DIR="$ROOT_DIR/.tools"
 
-if ! command -v appimagetool >/dev/null 2>&1; then
-  echo "[R2L] Missing dependency: appimagetool"
-  echo "[R2L] Install and re-run:"
-  echo "  sudo apt install -y appimagetool"
-  exit 1
+APPIMAGETOOL_BIN=""
+if command -v appimagetool >/dev/null 2>&1; then
+  APPIMAGETOOL_BIN="$(command -v appimagetool)"
+else
+  mkdir -p "$TOOLS_DIR"
+  case "$ARCH" in
+    x86_64) APPIMAGETOOL_URL="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-x86_64.AppImage" ;;
+    aarch64) APPIMAGETOOL_URL="https://github.com/AppImage/AppImageKit/releases/download/continuous/appimagetool-aarch64.AppImage" ;;
+    *)
+      echo "[R2L] Unsupported arch for auto-download: $ARCH"
+      echo "[R2L] Install appimagetool manually and rerun."
+      exit 1
+      ;;
+  esac
+  APPIMAGETOOL_BIN="$TOOLS_DIR/appimagetool-$ARCH.AppImage"
+  if [[ ! -x "$APPIMAGETOOL_BIN" ]]; then
+    echo "[R2L] Downloading appimagetool for $ARCH..."
+    curl -fsSL "$APPIMAGETOOL_URL" -o "$APPIMAGETOOL_BIN"
+    chmod +x "$APPIMAGETOOL_BIN"
+  fi
 fi
 
 echo "[R2L] Building release binary: $BIN_NAME"
@@ -71,7 +87,11 @@ APPIMAGE_NAME="${APP_NAME}-${VERSION_TAG}-${ARCH}.AppImage"
 APPIMAGE_PATH="$OUT_DIR/$APPIMAGE_NAME"
 SHA_PATH="$OUT_DIR/${APPIMAGE_NAME}.sha256"
 
-ARCH="$ARCH" appimagetool "$APPDIR" "$APPIMAGE_PATH"
+if [[ "$APPIMAGETOOL_BIN" == *.AppImage ]]; then
+  ARCH="$ARCH" APPIMAGE_EXTRACT_AND_RUN=1 "$APPIMAGETOOL_BIN" "$APPDIR" "$APPIMAGE_PATH"
+else
+  ARCH="$ARCH" "$APPIMAGETOOL_BIN" "$APPDIR" "$APPIMAGE_PATH"
+fi
 chmod +x "$APPIMAGE_PATH"
 sha256sum "$APPIMAGE_PATH" | tee "$SHA_PATH"
 

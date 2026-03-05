@@ -80,7 +80,6 @@ cd Repack2Linux-<target>
 
 ## Build AppImage (single-file distribution)
 ```bash
-sudo apt install -y appimagetool
 chmod +x build_appimage.sh
 ./build_appimage.sh
 ```

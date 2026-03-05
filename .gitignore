@@ -1,6 +1,7 @@
 # Rust
 /target/
 /dist/
+/.tools/
 **/*.rs.bk
 
 # Python/cache (workspace leftovers)
