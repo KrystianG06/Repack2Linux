@@ -72,6 +72,12 @@ This creates:
 - `dist/Repack2Linux-v1.01-<target>.tar.gz`
 - `dist/Repack2Linux-v1.01-<target>.sha256`
 
+After extracting the archive, install app icon/menu entry:
+```bash
+cd Repack2Linux-<target>
+./install_desktop_icon.sh
+```
+
 ## Typical Workflow
 1. Select game source folder/ISO.
 2. Let R2L detect and apply best profile/preset.
