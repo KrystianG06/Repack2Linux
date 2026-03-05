@@ -1,7 +1,9 @@
 use iced::widget::{
     button, checkbox, column, container, progress_bar, row, text, text_input, Space,
 };
-use iced::{Alignment, Background, Border, Color, Element, Gradient, Length, Shadow, Task, Vector};
+use iced::{
+    window, Alignment, Background, Border, Color, Element, Gradient, Length, Shadow, Task, Vector,
+};
 use std::path::{Path, PathBuf};
 use std::process::Stdio;
 
@@ -889,6 +891,7 @@ pub fn main() {
         InstallerGui::update,
         InstallerGui::view,
     )
+    .window(installer_window_settings())
     .run_with(move || {
         InstallerGui::new(
             game_name.clone(),
@@ -899,4 +902,46 @@ pub fn main() {
             req_mb,
         )
     });
+}
+
+fn installer_window_settings() -> window::Settings {
+    window::Settings {
+        icon: installer_window_icon(),
+        ..window::Settings::default()
+    }
+}
+
+fn installer_window_icon() -> Option<window::Icon> {
+    const SIZE: u32 = 64;
+    let mut rgba = vec![0_u8; (SIZE * SIZE * 4) as usize];
+    let cx = (SIZE as f32) / 2.0;
+    let cy = (SIZE as f32) / 2.0;
+    let radius = 19.5_f32;
+
+    for y in 0..SIZE {
+        for x in 0..SIZE {
+            let i = ((y * SIZE + x) * 4) as usize;
+            let mut r = 5_u8;
+            let mut g = 6_u8;
+            let mut b = 15_u8;
+            let a = 255_u8;
+
+            let dx = x as f32 - cx;
+            let dy = y as f32 - cy;
+            let d = (dx * dx + dy * dy).sqrt();
+            if d <= radius {
+                let t = (x as f32 + y as f32) / ((SIZE - 1) as f32 * 2.0);
+                r = (14.0 + (255.0 - 14.0) * t) as u8;
+                g = (95.0 + (79.0 - 95.0) * t) as u8;
+                b = (174.0 + (88.0 - 174.0) * t) as u8;
+            }
+
+            rgba[i] = r;
+            rgba[i + 1] = g;
+            rgba[i + 2] = b;
+            rgba[i + 3] = a;
+        }
+    }
+
+    window::icon::from_rgba(rgba, SIZE, SIZE).ok()
 }
