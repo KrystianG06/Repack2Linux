@@ -1,6 +1,7 @@
 # Repack2Linux (R2L)
 
-Portable game factory for Linux: build once, launch anywhere.
+Tool that automates installing Windows repacks on Linux using Wine/Proton.
+Designed to simplify the process for Linux gamers.
 
 <p>
   <img alt="Version" src="https://img.shields.io/badge/version-v1.2.0-1f6feb">
