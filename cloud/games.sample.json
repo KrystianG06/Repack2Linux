@@ -1040,7 +1040,7 @@
       "preferred_exe": "mysummercar.exe",
       "recommended_proton": "System Wine (Default)",
       "source": "community_learned",
-      "updated_at": "2026-03-05T11:44:41.767086293+00:00"
+      "updated_at": "2026-03-11T13:08:46.544913833+00:00"
     },
     {
       "game_name": "NINJA GAIDEN Ragebound",
@@ -1057,6 +1057,22 @@
       "recommended_proton": "System Wine (Default)",
       "source": "community_learned",
       "updated_at": "2026-03-05T14:52:04.295243584+00:00"
+    },
+    {
+      "game_name": "REANIMAL",
+      "is_64bit": true,
+      "needs_d3dx9": false,
+      "needs_dxvk": true,
+      "needs_physx": false,
+      "needs_vcrun": true,
+      "needs_vcrun2005": false,
+      "needs_vcrun2008": false,
+      "needs_xact": false,
+      "needs_xaudio": true,
+      "preferred_exe": "Everholm/Binaries/Win64/REANIMAL.exe",
+      "recommended_proton": "System Wine (Default)",
+      "source": "community_learned",
+      "updated_at": "2026-03-11T12:31:59.644857416+00:00"
     }
   ]
 }

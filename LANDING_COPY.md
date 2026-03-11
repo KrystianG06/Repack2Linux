@@ -1,6 +1,6 @@
-# R2P - Portable Game Factory for Linux
+# R2L - Fabryka Przenośnych Gier na Linuxa
 
-## Hero
+## Główne Przesłanie
 **Build once. Play anywhere.**  
 R2P automatyzuje tworzenie przenośnych paczek gier Windows na Linuxie: prefix, launcher, fallback Safe Mode i opcjonalny instalator `.sh`.
 

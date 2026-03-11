@@ -1,9 +1,11 @@
 use crate::ui::common::{font_mono, panel_card};
 use crate::ui::theme::{
-    brand_button_style, danger_button_style, ACCENT_BLUE, ACCENT_CYAN, ACCENT_GRAY, ACCENT_RED,
-    TEXT_DIM,
+    primary_button_style, secondary_button_style, danger_button_style, ACCENT_BLUE,
+    ACCENT_GRAY, ACCENT_RED, TEXT_DIM,
 };
-use crate::{dependencies::DependencyManager, installer::Installer, Message, RepackApp};
+use crate::dependencies::DependencyManager;
+use crate::installer::Installer;
+use crate::app::{Message, RepackApp};
 use iced::widget::{button, column, row, scrollable, text, Space};
 use iced::{Alignment, Color, Element, Length};
 
@@ -24,7 +26,7 @@ pub fn view_tools(app: &RepackApp) -> Element<'_, Message> {
             let color = if line.contains("[ERROR]") || line.contains("[CRITICAL]") {
                 ACCENT_RED
             } else if line.contains("[OK]") || line.contains("[SUCCESS]") {
-                ACCENT_CYAN
+                ACCENT_BLUE
             } else {
                 ACCENT_GRAY
             };
@@ -44,7 +46,7 @@ pub fn view_tools(app: &RepackApp) -> Element<'_, Message> {
                 .map(|lib| {
                     text(format!("- {}", lib))
                         .size(12)
-                        .color(ACCENT_CYAN)
+                        .color(ACCENT_BLUE)
                         .into()
                 })
                 .collect::<Vec<_>>(),
@@ -53,7 +55,7 @@ pub fn view_tools(app: &RepackApp) -> Element<'_, Message> {
         .into()
     };
 
-    column![
+    let content = column![
         row![
             panel_card(
                 app.tr("tools_system_health"),
@@ -86,11 +88,11 @@ pub fn view_tools(app: &RepackApp) -> Element<'_, Message> {
                 column![
                     button(text(app.tr("tools_fix_system")))
                         .on_press(Message::InstallMissingPressed)
-                        .style(|t, s| brand_button_style(t, s, true))
+                        .style(|t, s| primary_button_style(t, s))
                         .width(Length::Fill),
                     button(text(app.tr("open_debug")))
                         .on_press(Message::OpenDebugShellPressed)
-                        .style(|t, s| brand_button_style(t, s, false))
+                        .style(|t, s| secondary_button_style(t, s))
                         .width(Length::Fill),
                     row![
                         button(text(app.tr("unmount_iso")))
@@ -106,15 +108,15 @@ pub fn view_tools(app: &RepackApp) -> Element<'_, Message> {
                     row![
                         button(text(app.tr("tools_copy_logs")))
                             .on_press(Message::CopyLogsToClipboard)
-                            .style(|t, s| brand_button_style(t, s, false))
+                            .style(|t, s| secondary_button_style(t, s))
                             .width(Length::FillPortion(1)),
                         button(text(app.tr("tools_save_logs")))
                             .on_press(Message::SaveLogsPressed)
-                            .style(|t, s| brand_button_style(t, s, false))
+                            .style(|t, s| secondary_button_style(t, s))
                             .width(Length::FillPortion(1)),
                         button(text(app.tr("tools_analyze")))
                             .on_press(Message::AnalyzeLogsPressed)
-                            .style(|t, s| brand_button_style(t, s, true))
+                            .style(|t, s| primary_button_style(t, s))
                             .width(Length::FillPortion(1)),
                     ]
                     .spacing(12),
@@ -135,7 +137,7 @@ pub fn view_tools(app: &RepackApp) -> Element<'_, Message> {
                 column![
                     text(app.tr("tools_missing_packages")).size(12).color(
                         if missing_libs.is_empty() {
-                            ACCENT_CYAN
+                            ACCENT_BLUE
                         } else {
                             Color::from_rgb(1.0, 0.5, 0.3)
                         }
@@ -148,9 +150,12 @@ pub fn view_tools(app: &RepackApp) -> Element<'_, Message> {
         ]
         .spacing(20),
     ]
-    .spacing(24)
-    .padding(32)
-    .into()
+    .spacing(24);
+
+    crate::ui::theme::glass_container(content)
+        .width(Length::Fill)
+        .height(Length::Fill)
+        .into()
 }
 
 fn status_row<'a>(app: &'a RepackApp, label: &'a str, ok: bool) -> Element<'a, Message> {

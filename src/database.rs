@@ -80,14 +80,14 @@ pub struct GameProfile {
 
 impl Database {
     fn app_config_dir() -> PathBuf {
-        let mut dir = dirs::config_dir().unwrap_or(PathBuf::from("."));
+        let mut dir = dirs::config_dir().unwrap_or_else(|| PathBuf::from("."));
         dir.push("repack2linux");
         let _ = std::fs::create_dir_all(&dir);
         dir
     }
 
     fn legacy_config_dir() -> PathBuf {
-        let mut dir = dirs::config_dir().unwrap_or(PathBuf::from("."));
+        let mut dir = dirs::config_dir().unwrap_or_else(|| PathBuf::from("."));
         dir.push("repack2proton");
         dir
     }
@@ -103,8 +103,15 @@ impl Database {
             }
         }
 
-        let conn = Connection::open(db_path).expect("Failed to open SQLite database");
-        Self::ensure_schema(&conn).expect("Failed to ensure database schema");
+        let conn = match Connection::open(&db_path) {
+            Ok(c) => c,
+            Err(_) => {
+                // Fallback do bazy w pamięci, jeśli nie można otworzyć pliku
+                Connection::open_in_memory().unwrap_or_else(|_| Connection::open(":memory:").unwrap())
+            }
+        };
+
+        let _ = Self::ensure_schema(&conn);
         let db = Self { conn };
         db.seed_knowledge();
         db

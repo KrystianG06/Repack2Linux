@@ -1,5 +1,5 @@
 use crate::ui::theme::{panel_container, TEXT_DIM};
-use crate::Message;
+use crate::app::Message;
 use iced::widget::{column, container, text};
 use iced::{Element, Length};
 

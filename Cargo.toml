@@ -1,7 +1,12 @@
 [package]
 name = "repack2proton-rs"
-version = "0.1.0"
+version = "1.3.0"
 edition = "2021"
+# build = "build.rs" # Wyłączone tymczasowo
+
+[features]
+default = ["embed_tools"]
+embed_tools = []
 
 [dependencies]
 # GUI (GPU Accelerated, Native Look)

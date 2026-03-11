@@ -4,7 +4,9 @@ use regex::Regex;
 use std::io::Read;
 use std::path::{Path, PathBuf};
 use walkdir::WalkDir;
+use pelite::resources::Name;
 
+#[allow(dead_code)]
 #[derive(Debug, Clone, PartialEq)]
 pub enum RepackType {
     FitGirl,
@@ -254,18 +256,199 @@ impl Detector {
         candidates.first().map(|c| c.0.clone())
     }
 
-    pub fn extract_icon(game_dir: &Path, output_png: &Path) -> bool {
-        if let Some(exe) = Self::find_game_exe(game_dir) {
-            let _ = std::process::Command::new("wrestool")
-                .arg("-x")
-                .arg("-t")
-                .arg("14")
-                .arg("-o")
-                .arg(output_png)
-                .arg(&exe)
-                .status();
-            return output_png.exists();
+    pub fn extract_icon(exe_path: &Path, output_png: &Path) -> bool {
+        // 1. Zawsze czyścimy przed startem, żeby nie było starych śmieci
+        if output_png.exists() {
+            let _ = std::fs::remove_file(output_png);
+        }
+
+        // 2. Próbujemy wyciągnąć ikonę bezpośrednio z EXE za pomocą pelite
+        if let Ok(bytes) = std::fs::read(exe_path) {
+            let icon_data: Option<Vec<u8>> = match PeFile::from_bytes(&bytes) {
+                Ok(pe) => {
+                    use pelite::pe64::Pe;
+                    pe.resources().ok().and_then(|res| Self::get_best_icon_from_pe(res))
+                }
+                Err(_) => match PeFile32::from_bytes(&bytes) {
+                    Ok(pe) => {
+                        use pelite::pe32::Pe;
+                        pe.resources().ok().and_then(|res| Self::get_best_icon_from_pe(res))
+                    }
+                    Err(_) => None,
+                },
+            };
+
+            if let Some(data) = icon_data.as_ref() {
+                // Konwersja na PNG za pomocą biblioteki image, aby uniknąć "śniegu" i błędnych formatów
+                if let Ok(img) = image::load_from_memory(&data) {
+                    if img.save(output_png).is_ok() {
+                        return true;
+                    }
+                }
+            }
+        }
+
+        // --- FALLBACK: Jeśli ekstrakcja z EXE zawiodła, szukamy gotowych plików w folderze ---
+        let game_dir = match exe_path.parent() {
+            Some(p) => p,
+            None => return false,
+        };
+        let common_names = ["icon.png", "icon.ico", "folder.jpg", "app.ico", "UnityPlayer.ico", "UnityPlayer.png"];
+        let mut search_paths = vec![game_dir.to_path_buf()];
+        
+        if let Ok(entries) = std::fs::read_dir(game_dir) {
+            for entry in entries.filter_map(|e| e.ok()) {
+                if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) {
+                    let name = entry.file_name().to_string_lossy().to_lowercase();
+                    if name.ends_with("_data") || name == "resources" || name == "assets" {
+                        search_paths.push(entry.path());
+                    }
+                }
+            }
+        }
+
+        for path in search_paths {
+            for name in common_names {
+                let p = path.join(name);
+                if p.exists() {
+                    if name.ends_with(".png") {
+                        // Nawet jeśli to PNG, przepuszczamy przez bibliotekę image dla pewności poprawności
+                        if let Ok(img) = image::open(&p) {
+                            if img.save(output_png).is_ok() {
+                                return true;
+                            }
+                        }
+                    } else if name.ends_with(".ico") {
+                        if let Ok(bytes) = std::fs::read(&p) {
+                            if let Ok(img) = image::load_from_memory(&bytes) {
+                                if img.save(output_png).is_ok() {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
         }
         false
+    }
+
+    fn get_best_icon_from_pe<'a>(resources: pelite::resources::Resources<'a>) -> Option<Vec<u8>> {
+        let root = resources.root().ok()?;
+
+        // 1. Znajdujemy katalog grup ikon (ID 14)
+        let mut group_type_dir = None;
+        for entry in root.entries() {
+            if let Ok(name) = entry.name() {
+                if name == Name::Id(14) {
+                    if let Ok(pelite::resources::Entry::Directory(d)) = entry.entry() {
+                        group_type_dir = Some(d);
+                        break;
+                    }
+                }
+            }
+        }
+        let group_type_dir = group_type_dir?;
+
+        let mut best_entry: Option<(u8, u8, u16, u16)> = None; // (w, h, bpp, id)
+
+        // 2. Szukamy najlepszej ikony w grupach
+        for entry in group_type_dir.entries() {
+            if let Ok(pelite::resources::Entry::Directory(name_dir)) = entry.entry() {
+                // Pozycja w katalogu języków (poziom 3)
+                if let Some(lang_entry) = name_dir.entries().next() {
+                    if let Ok(pelite::resources::Entry::DataEntry(data_entry)) = lang_entry.entry() {
+                        if let Ok(data) = data_entry.bytes() {
+                            if data.len() < 6 {
+                                continue;
+                            }
+                            let count = u16::from_le_bytes([data[4], data[5]]);
+                            let mut offset = 6;
+                            for _ in 0..count {
+                                if data.len() < offset + 14 {
+                                    break;
+                                }
+                                let w    = data[offset];
+                                let h    = data[offset + 1];
+                                let bpp  = u16::from_le_bytes([data[offset + 6], data[offset + 7]]);
+                                let id   = u16::from_le_bytes([data[offset + 12], data[offset + 13]]);
+
+                                let eff_w = if w == 0 { 256u32 } else { w as u32 };
+                                let eff_h = if h == 0 { 256u32 } else { h as u32 };
+                                let eff_bpp = if bpp == 0 { 32u32 } else { bpp as u32 };
+                                let score = eff_w * eff_h * eff_bpp;
+
+                                if let Some((bw, bh, bbpp, _)) = best_entry {
+                                    let beff_w = if bw == 0 { 256u32 } else { bw as u32 };
+                                    let beff_h = if bh == 0 { 256u32 } else { bh as u32 };
+                                    let beff_bpp = if bbpp == 0 { 32u32 } else { bbpp as u32 };
+                                    if score > beff_w * beff_h * beff_bpp {
+                                        best_entry = Some((w, h, bpp, id));
+                                    }
+                                } else {
+                                    best_entry = Some((w, h, bpp, id));
+                                }
+                                offset += 14;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        if let Some((w, h, bpp, id)) = best_entry {
+            // 3. Pobieramy dane konkretnej ikony (Typ 3) o ID wyciągniętym z grupy
+            let mut icon_type_dir = None;
+            for entry in root.entries() {
+                if let Ok(name) = entry.name() {
+                    if name == Name::Id(3) {
+                        if let Ok(pelite::resources::Entry::Directory(d)) = entry.entry() {
+                            icon_type_dir = Some(d);
+                            break;
+                        }
+                    }
+                }
+            }
+            let icon_type_dir = icon_type_dir?;
+
+            let mut icon_name_dir = None;
+            for entry in icon_type_dir.entries() {
+                if let Ok(name) = entry.name() {
+                    if name == Name::Id(id as u32) {
+                        if let Ok(pelite::resources::Entry::Directory(d)) = entry.entry() {
+                            icon_name_dir = Some(d);
+                            break;
+                        }
+                    }
+                }
+            }
+            let icon_name_dir = icon_name_dir?;
+
+            if let Some(lang_entry) = icon_name_dir.entries().next() {
+                if let Ok(pelite::resources::Entry::DataEntry(data_entry)) = lang_entry.entry() {
+                    if let Ok(icon_data) = data_entry.bytes() {
+                        if icon_data.starts_with(&[0x89, 0x50, 0x4E, 0x47]) {
+                            return Some(icon_data.to_vec());
+                        }
+
+                        let mut ico = Vec::with_capacity(22 + icon_data.len());
+                        ico.extend_from_slice(&[0, 0]); // Reserved
+                        ico.extend_from_slice(&[1, 0]); // Type (1 for icon)
+                        ico.extend_from_slice(&[1, 0]); // Count (1 icon)
+                        ico.push(w);
+                        ico.push(h);
+                        ico.push(0); // Color count
+                        ico.push(0); // Reserved
+                        ico.extend_from_slice(&1u16.to_le_bytes()); // Planes
+                        ico.extend_from_slice(&bpp.to_le_bytes()); // BPP
+                        ico.extend_from_slice(&(icon_data.len() as u32).to_le_bytes());
+                        ico.extend_from_slice(&22u32.to_le_bytes()); // Offset
+                        ico.extend_from_slice(icon_data);
+                        return Some(ico);
+                    }
+                }
+            }
+        }
+        None
     }
 }

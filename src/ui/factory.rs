@@ -2,14 +2,16 @@ use crate::config::UiMode;
 use crate::export::{ExportAudit, ExportScope};
 use crate::ui::common::{font_bold, font_mono, info_block, panel_card};
 use crate::ui::theme::{
-    brand_button_style, glass_container, ACCENT_BLUE, ACCENT_CYAN, ACCENT_GRAY, ACCENT_RED,
-    TEXT_DIM,
+    glass_container, primary_button_style, secondary_button_style, ACCENT_BLUE, ACCENT_GRAY,
+    ACCENT_RED, TEXT_DIM,
 };
-use crate::{ExportStatus, Message, RepackApp};
+use crate::app::{ExportStatus, Message, RepackApp};
 use iced::widget::{
     button, column, container, pick_list, progress_bar, row, scrollable, text, Space,
+    Image,
 };
-use iced::{Alignment, Background, Border, Color, Element, Length, Shadow, Vector};
+use iced::gradient::Linear;
+use iced::{Alignment, Background, Border, Color, Element, Gradient, Length, Shadow, Vector};
 
 pub fn view_factory(app: &RepackApp) -> Element<'_, Message> {
     match app.ui_mode {
@@ -23,12 +25,12 @@ fn status_tag<'a>(label: &'a str, color: Color) -> Element<'a, Message> {
         .padding([2, 8])
         .style(move |_| container::Style {
             background: Some(Background::Color(Color::from_rgba(
-                color.r, color.g, color.b, 0.1,
+                color.r, color.g, color.b, 0.08,
             ))),
             border: Border {
-                radius: 4.0.into(),
-                width: 1.0,
-                color: Color::from_rgba(color.r, color.g, color.b, 0.3),
+                radius: 10.0.into(),
+                width: 1.2,
+                color: Color::from_rgba(color.r, color.g, color.b, 0.4),
             },
             ..Default::default()
         })
@@ -38,7 +40,7 @@ fn status_tag<'a>(label: &'a str, color: Color) -> Element<'a, Message> {
 fn view_simple(app: &RepackApp) -> Element<'_, Message> {
     let (status_label, status_name, status_color) =
         if let Some((_, _, _, db_name, _)) = app.db.find_cloud_preset(&app.game_name) {
-            (app.tr("factory_preset_applied"), db_name, ACCENT_CYAN)
+            (app.tr("factory_preset_applied"), db_name, ACCENT_BLUE)
         } else if app.game_name.is_empty() {
             (
                 app.tr("factory_ready"),
@@ -53,26 +55,51 @@ fn view_simple(app: &RepackApp) -> Element<'_, Message> {
             )
         };
 
-    let header = column![
-        row![
-            text(app.tr("factory_title"))
-                .size(22)
-                .font(font_bold())
-                .color(ACCENT_CYAN),
-            Space::with_width(Length::Fill),
-            text("v1.01").size(11).color(TEXT_DIM),
-        ],
-        row![
-            status_tag(status_label, status_color),
-            Space::with_width(10),
-            text(status_name)
-                .size(14)
-                .font(font_bold())
-                .color(Color::WHITE),
+    let game_icon: Element<'_, Message> = if let Some(handle) = &app.game_icon {
+        column![
+            Image::<iced::widget::image::Handle>::new(handle.clone()).width(64).height(64),
+            Space::with_height(4)
         ]
-        .align_y(Alignment::Center)
+        .into()
+    } else {
+        container(Space::with_width(64).height(64))
+            .style(|_| container::Style {
+                background: Some(Background::Color(Color::from_rgba(1.0, 1.0, 1.0, 0.05))),
+                border: Border {
+                    radius: 8.0.into(),
+                    ..Default::default()
+                },
+                ..Default::default()
+            })
+            .into()
+    };
+
+    let header = row![
+        game_icon,
+        column![
+            row![
+                text(app.tr("factory_title"))
+                    .size(22)
+                    .font(font_bold())
+                    .color(ACCENT_BLUE),
+                Space::with_width(Length::Fill),
+                text("v1.3.0").size(11).color(TEXT_DIM),
+            ],
+            row![
+                status_tag(status_label, status_color),
+                Space::with_width(10),
+                text(status_name)
+                    .size(14)
+                    .font(font_bold())
+                    .color(Color::WHITE),
+            ]
+            .align_y(Alignment::Center)
+        ]
+        .spacing(10)
+        .width(Length::Fill)
     ]
-    .spacing(10);
+    .spacing(20)
+    .align_y(Alignment::Center);
 
     let env_label = app
         .selected_proton
@@ -100,7 +127,7 @@ fn view_simple(app: &RepackApp) -> Element<'_, Message> {
                 .center_x(Length::Fill),
             )
             .on_press(Message::SelectRepackPressed)
-            .style(|t, s| brand_button_style(t, s, false))
+            .style(|t, s| secondary_button_style(t, s))
             .width(Length::Fill),
         )
     } else if app.is_producing {
@@ -115,7 +142,7 @@ fn view_simple(app: &RepackApp) -> Element<'_, Message> {
             )
             .width(Length::Fill)
             .padding(30)
-            .style(|t, s| brand_button_style(t, s, true)),
+            .style(|t, s| primary_button_style(t, s)),
         )
     } else {
         Element::from(
@@ -131,7 +158,7 @@ fn view_simple(app: &RepackApp) -> Element<'_, Message> {
                 .on_press(Message::StartProductionPressed)
                 .width(Length::Fill)
                 .padding(30)
-                .style(|t, s| brand_button_style(t, s, true)),
+                .style(|t, s| primary_button_style(t, s)),
                 button(
                     container(
                         text(app.tr("factory_change_source"))
@@ -157,9 +184,13 @@ fn view_simple(app: &RepackApp) -> Element<'_, Message> {
             .height(8)
             .style(|_| progress_bar::Style {
                 background: Background::Color(Color::from_rgba(1.0, 1.0, 1.0, 0.05)),
-                bar: Background::Color(ACCENT_BLUE),
+                bar: Background::Gradient(Gradient::Linear(
+                    Linear::new(0.0)
+                        .add_stop(0.0, ACCENT_BLUE)
+                        .add_stop(1.0, ACCENT_BLUE),
+                )),
                 border: Border {
-                    radius: 4.0.into(),
+                    radius: 10.0.into(),
                     ..Default::default()
                 }
             }),
@@ -222,7 +253,7 @@ fn view_simple(app: &RepackApp) -> Element<'_, Message> {
             ),
             button(text(app.tr("factory_rollback_learned")))
                 .on_press(Message::RollbackLearnedPressed)
-                .style(|t, s| brand_button_style(t, s, false))
+                .style(|t, s| secondary_button_style(t, s))
                 .width(Length::Fill),
         ]
         .spacing(10),
@@ -247,19 +278,35 @@ fn view_simple(app: &RepackApp) -> Element<'_, Message> {
 
 fn view_advanced(app: &RepackApp) -> Element<'_, Message> {
     let (status_label, status_color) = if app.db.find_cloud_preset(&app.game_name).is_some() {
-        (app.tr("factory_preset_applied"), ACCENT_CYAN)
+        (app.tr("factory_preset_applied"), ACCENT_BLUE)
     } else if app.game_name.is_empty() {
         (app.tr("factory_idle"), TEXT_DIM)
     } else {
         (app.tr("factory_heuristic_analysis"), ACCENT_GRAY)
     };
 
+    let game_icon: Element<'_, Message> = if let Some(handle) = &app.game_icon {
+        Image::<iced::widget::image::Handle>::new(handle.clone()).width(48).height(48).into()
+    } else {
+        container(Space::with_width(48).height(48))
+            .style(|_| container::Style {
+                background: Some(Background::Color(Color::from_rgba(1.0, 1.0, 1.0, 0.05))),
+                border: Border {
+                    radius: 6.0.into(),
+                    ..Default::default()
+                },
+                ..Default::default()
+            })
+            .into()
+    };
+
     let header = row![
+        game_icon,
         column![
             text(app.tr("factory_advanced_pipeline"))
                 .size(22)
                 .font(font_bold())
-                .color(ACCENT_CYAN),
+                .color(ACCENT_BLUE),
             row![
                 status_tag(status_label, status_color),
                 Space::with_width(10),
@@ -274,7 +321,7 @@ fn view_advanced(app: &RepackApp) -> Element<'_, Message> {
         Space::with_width(Length::Fill),
         button(text(app.tr("factory_simple_mode")))
             .on_press(Message::ToggleUiMode(UiMode::Simple))
-            .style(|t, s| brand_button_style(t, s, false)),
+            .style(|t, s| secondary_button_style(t, s)),
     ]
     .align_y(Alignment::Center)
     .spacing(12);
@@ -299,11 +346,11 @@ fn view_advanced(app: &RepackApp) -> Element<'_, Message> {
             row![
                 button(text(app.tr("factory_change_exe")))
                     .on_press(Message::SelectGameExePressed)
-                    .style(|t, s| brand_button_style(t, s, false))
+                    .style(|t, s| secondary_button_style(t, s))
                     .width(Length::FillPortion(1)),
                 button(text(app.tr("factory_copy_logs")))
                     .on_press(Message::CopyLogsToClipboard)
-                    .style(|t, s| brand_button_style(t, s, false))
+                    .style(|t, s| secondary_button_style(t, s))
                     .width(Length::FillPortion(1)),
             ]
             .spacing(8),
@@ -328,7 +375,7 @@ fn view_advanced(app: &RepackApp) -> Element<'_, Message> {
                     ),
                     button(text(app.tr("factory_rollback_learned")))
                         .on_press(Message::RollbackLearnedPressed)
-                        .style(|t, s| brand_button_style(t, s, false))
+                        .style(|t, s| secondary_button_style(t, s))
                         .width(Length::Fill),
                 ]
                 .spacing(8),
@@ -375,15 +422,15 @@ fn view_advanced(app: &RepackApp) -> Element<'_, Message> {
                     .center_x(Length::Fill)
             )
             .on_press(Message::SelectRepackPressed)
-            .style(|t, s| brand_button_style(t, s, false))
-            .width(Length::Fill),
+                .style(|t, s| secondary_button_style(t, s))
+                .width(Length::Fill),
             button(
                 container(text(app.tr("factory_mount_iso")))
                     .padding(16)
                     .center_x(Length::Fill)
             )
             .on_press(Message::SelectFilePressed)
-            .style(|t, s| brand_button_style(t, s, false))
+            .style(|t, s| secondary_button_style(t, s))
             .width(Length::Fill),
         ]
         .spacing(12)
@@ -394,7 +441,7 @@ fn view_advanced(app: &RepackApp) -> Element<'_, Message> {
                 .center_x(Length::Fill),
         )
         .width(Length::Fill)
-        .style(|t, s| brand_button_style(t, s, true)),]
+        .style(|t, s| primary_button_style(t, s)),]
     } else {
         column![button(
             container(text(app.tr("factory_start_production")))
@@ -403,7 +450,7 @@ fn view_advanced(app: &RepackApp) -> Element<'_, Message> {
         )
         .on_press(Message::StartProductionPressed)
         .width(Length::Fill)
-        .style(|t, s| brand_button_style(t, s, true)),]
+        .style(|t, s| primary_button_style(t, s)),]
     };
 
     let production_card = panel_card(
@@ -525,7 +572,7 @@ fn view_export_setup(app: &RepackApp) -> Element<'_, Message> {
                 text(app.tr("export_config_title"))
                     .size(24)
                     .font(font_bold())
-                    .color(ACCENT_CYAN),
+                    .color(ACCENT_BLUE),
                 text(app.tr("export_config_desc")).size(12).color(TEXT_DIM),
             ]
             .spacing(4),
@@ -535,7 +582,7 @@ fn view_export_setup(app: &RepackApp) -> Element<'_, Message> {
                     text(app.tr("export_pack_options"))
                         .size(14)
                         .font(font_bold())
-                        .color(ACCENT_CYAN),
+                        .color(ACCENT_BLUE),
                     Space::with_height(15),
                     iced::widget::checkbox(app.tr("export_standalone"), app.opt_export_standalone)
                         .on_toggle(Message::ToggleExportStandalone),
@@ -564,7 +611,7 @@ fn view_export_setup(app: &RepackApp) -> Element<'_, Message> {
                     text(app.tr("export_scope_title"))
                         .size(14)
                         .font(font_bold())
-                        .color(ACCENT_CYAN),
+                        .color(ACCENT_BLUE),
                     pick_list(
                         ExportScope::ALL,
                         Some(app.export_scope),
@@ -582,12 +629,12 @@ fn view_export_setup(app: &RepackApp) -> Element<'_, Message> {
                 text(app.tr("export_target"))
                     .size(14)
                     .font(font_bold())
-                    .color(ACCENT_CYAN),
+                    .color(ACCENT_BLUE),
                 Space::with_height(10),
                 row![
                     button(text(app.tr("export_change_folder")))
                         .on_press(Message::SelectExportPathPressed)
-                        .style(|t, s| brand_button_style(t, s, false)),
+                        .style(|t, s| secondary_button_style(t, s)),
                     Space::with_width(15),
                     text(
                         app.export_dest_path
@@ -609,7 +656,7 @@ fn view_export_setup(app: &RepackApp) -> Element<'_, Message> {
                         .center_x(Length::Fill)
                 )
                 .on_press(Message::RunExportPressed)
-                .style(|t, s| brand_button_style(t, s, true))
+                .style(|t, s| primary_button_style(t, s))
                 .width(Length::Fill),
                 button(
                     container(text(app.tr("export_cancel")).font(font_bold()))
@@ -617,7 +664,7 @@ fn view_export_setup(app: &RepackApp) -> Element<'_, Message> {
                         .center_x(Length::Fill)
                 )
                 .on_press(Message::CloseModalPressed)
-                .style(|t, s| brand_button_style(t, s, false))
+                .style(|t, s| secondary_button_style(t, s))
                 .width(Length::Fill),
             ]
             .spacing(20)
@@ -639,7 +686,7 @@ fn view_export_progress<'a>(
             text(app.tr("export_running"))
                 .size(24)
                 .font(font_bold())
-                .color(ACCENT_CYAN),
+                .color(ACCENT_BLUE),
             Space::with_height(10),
             text(msg).size(14).color(Color::WHITE),
             Space::with_height(40),
@@ -650,7 +697,7 @@ fn view_export_progress<'a>(
                     text(format!("{}%", (progress * 100.0) as i32))
                         .size(12)
                         .font(font_bold())
-                        .color(ACCENT_CYAN)
+                        .color(ACCENT_BLUE)
                 ],
                 text(format!("{}: {}", app.tr("export_scope_label"), scope))
                     .size(11)
@@ -667,7 +714,7 @@ fn view_export_progress<'a>(
                     .height(12)
                     .style(|_| progress_bar::Style {
                         background: Background::Color(Color::from_rgba(1.0, 1.0, 1.0, 0.05)),
-                        bar: Background::Color(ACCENT_CYAN),
+                        bar: Background::Color(ACCENT_BLUE),
                         border: Border {
                             radius: 6.0.into(),
                             ..Default::default()
@@ -704,7 +751,7 @@ fn view_export_success<'a>(
             text(app.tr("export_done_title"))
                 .size(28)
                 .font(font_bold())
-                .color(ACCENT_CYAN),
+                .color(ACCENT_BLUE),
             Space::with_height(10),
             text(app.tr("export_done_desc"))
                 .size(14)
@@ -720,7 +767,7 @@ fn view_export_success<'a>(
                     app.tr("export_done_full")
                 })
                 .size(11)
-                .color(if dry_run { ACCENT_RED } else { ACCENT_CYAN }),
+                .color(if dry_run { ACCENT_RED } else { ACCENT_BLUE }),
             ]
             .spacing(4),
             Space::with_height(10),
@@ -768,7 +815,7 @@ fn view_export_success<'a>(
                         .center_x(Length::Fill)
                 )
                 .on_press(Message::LogAppended(format!("[OPEN] Opening: {}", p)))
-                .style(|t, s| brand_button_style(t, s, true))
+                .style(|t, s| primary_button_style(t, s))
                 .width(Length::Fill),
                 button(
                     container(text(app.tr("export_close")).font(font_bold()))
@@ -776,7 +823,7 @@ fn view_export_success<'a>(
                         .center_x(Length::Fill)
                 )
                 .on_press(Message::CloseModalPressed)
-                .style(|t, s| brand_button_style(t, s, false))
+                .style(|t, s| secondary_button_style(t, s))
                 .width(Length::Fill),
             ]
             .spacing(20)
@@ -803,7 +850,7 @@ fn view_export_error<'a>(app: &'a RepackApp, err: &'a str) -> Element<'a, Messag
                     .center_x(Length::Fill)
             )
             .on_press(Message::CloseModalPressed)
-            .style(|t, s| brand_button_style(t, s, true))
+            .style(|t, s| primary_button_style(t, s))
             .width(Length::Fill),
         ]
         .padding(20)

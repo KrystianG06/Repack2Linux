@@ -88,8 +88,8 @@
 - **Offline first:** Sync routines and dependency checks rely on local data, so R2P never requests Steam tokens or cloud access during prefix detection.
 
 ### ✅ UI & UX
-- **Palette:** Cały interfejs korzysta z niebiesko-czerwono-szarej palety, stałych promieni i czcionki Noto Sans, a przyciski są spójne bez emoji.
-- **Dialogs:** Modalne okna blokują główne komponenty, logi używają tej samej palety, a eksport pokazuje informacje o czcionce i stylach również w README i wygenerowanym `play.sh`.
+- **Paleta:** Cały interfejs korzysta z niebiesko-czerwono-szarej palety, stałych promieni i czcionki Noto Sans, a przyciski są spójne bez emoji.
+- **Dialogi:** Modalne okna blokują główne komponenty, logi używają tej samej palety, a eksport pokazuje informacje o czcionce i stylach również w README i wygenerowanym `play.sh`.
 - **Responsywność:** kafelki Fabryki, narzędzi i ustawień skalują się, a pasek postępu zawsze pozostaje widoczny i animowany podczas asynchronicznych zadań.
 - **Audit i szybki dry run:** eksport dopisuje SHA256 komponentów, modal pokazuje je użytkownikowi, a dry run wykonuje szybką weryfikację tylko prefixu + `play.sh`/README (bez pakowania całej paczki), dzięki czemu diagnostyka jest kilkukrotnie szybsza.
 - **Test coverage:** dodano jednostkowe testy `Installer::search_existing_base_prefix`, `prefix_score`, generatora `play.sh` oraz `ShortcutManager::create_desktop_shortcut` – `cargo test` weryfikuje tworzenie skrótów i skryptów.
@@ -114,6 +114,31 @@
 
 ### ✅ DOKUMENTACJA I LOGI
 - **Czas w dokumentach:** README i PROGRESS zawierają dokładny znacznik daty/godziny oraz zapis „całkowitego postępu”, a wygenerowany `play.sh` dokumentuje używaną czcionkę/temat.
+
+---
+
+## Date: 2026-03-11 13:30:00 CET (Integracja UI i Solidność Ikon)
+
+### ✅ INTEGRACJA IKON W UI
+- **Widoczność w Factory:** Ikona gry jest teraz wyświetlana bezpośrednio w interfejsie (zarówno w trybie prostym, jak i zaawansowanym).
+- **Automatyczne odświeżanie:** Interfejs natychmiastowo reaguje na wybór folderu lub zmianę pliku EXE, wyświetlając aktualną ikonę.
+- **Obsługa Iced 0.13:** Rozwiązano problemy z silnikiem renderującym obrazy, zapewniając stabilne wyświetlanie zasobów PNG.
+
+### ✅ SOLIDNE PAKOWANIE EKSPORTU
+- **Auto-detekcja EXE:** Jeśli użytkownik nie wybierze pliku EXE ręcznie, eksporter automatycznie wykryje główny plik gry, aby wyciągnąć z niego ikonę do paczki.
+- **Spójność SFX/Portable:** Ikona `icon.png` jest teraz gwarantowana w każdym trybie eksportu (Game Only / Libs Only / Full).
+- **Katalog roboczy (Path):** Skróty `.desktop` zawierają teraz pole `Path`, co rozwiązuje problemy z grami, które wymagają uruchomienia bezpośrednio z ich folderu.
+
+## Date: 2026-03-11 11:30:00 CET (Zaawansowana Ekstrakcja Ikon i Refaktoryzacja Modułów)
+
+### ✅ SOLIDNA EKSTRAKCJA IKON (PELITE + IMAGE)
+- **Bezpośrednia ekstrakcja z EXE:** Zastąpiono zewnętrzne narzędzia (`wrestool`, `icotool`) biblioteką `pelite`. Ikony są wyciągane bezpośrednio z zasobów PE.
+- **Fix "Color Snow":** Każda ikona przechodzi przez bibliotekę `image`, co eliminuje artefakty graficzne ("śnieżenie") na Linuxie.
+- **Polityka świeżości:** `extract_icon` czyści starą ikonę przed każdym buildem, zapewniając aktualność zasobu.
+
+### ✅ REFAKTORYZACJA INSTALATORA (MODUŁOWOŚĆ)
+- **Podział na moduły:** Rozbito `installer.rs` na mniejsze pliki w `src/installer/`: `sfx.rs`, `payload.rs`, `script_gen.rs`.
+- **Czyste API:** Zachowano pełną kompatybilność, poprawiając czytelność kodu i łatwość konserwacji.
 
 ---
 

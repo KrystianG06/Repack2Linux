@@ -1,150 +1,100 @@
 # Repack2Linux (R2L)
 
-Tool that automates installing Windows repacks on Linux using Wine/Proton.
-Designed to simplify the process for Linux gamers.
+Narzędzie automatyzujące instalację wideo-repacków z Windowsa na Linuxie przy użyciu Wine/Proton.
+Zaprojektowane, aby maksymalnie uprościć proces dla graczy korzystających z Linuxa.
 
 <p>
-  <img alt="Version" src="https://img.shields.io/badge/version-v1.2.0-1f6feb">
-  <img alt="Platform" src="https://img.shields.io/badge/platform-Linux-0a0a0a">
+  <img alt="Wersja" src="https://img.shields.io/badge/version-v1.3.0-1f6feb">
+  <img alt="Platforma" src="https://img.shields.io/badge/platform-Linux-0a0a0a">
   <img alt="Status" src="https://img.shields.io/badge/status-stable-1f883d">
-  <img alt="Engine" src="https://img.shields.io/badge/engine-Wine%20%2B%20Proton-8b5cf6">
+  <img alt="Silnik" src="https://img.shields.io/badge/engine-Wine%20%2B%20Proton-8b5cf6">
 </p>
 
-## What Is R2L?
-Repack2Linux is a desktop app that converts Windows game sources into self-contained Linux-ready packages.  
-It builds/learns prefix configuration, exports portable artifacts, and ships auto-recovery launchers (`play_auto.sh` + safe fallback).
+## Czym jest R2L?
+Repack2Linux to aplikacja desktopowa, która konwertuje instalatory gier z Windowsa na gotowe do użycia, samodzielne paczki linuxowe.
+Aplikacja automatycznie skanuje i konfiguruje prefiksy Wine, eksportuje wersje przenośne (Portable) i generuje inteligentne skrypty startowe (`play_auto.sh`) z mechanizmem automatycznego odzyskiwania.
 
-## Why Use It?
-- Zero-manual pipeline from source to playable package.
-- Portable-first architecture with local data isolation.
-- Auto-learning profiles shared across runs (and optional community sync).
-- Reliable launch flow for non-technical users.
+## Dlaczego warto?
+- Automatyzacja całego procesu – od źródła do gotowej gry.
+- Architektura "Portable-first" – izolacja zapisów gier i danych wewnątrz paczki.
+- Inteligentne profile uczące się optymalnych ustawień (wymagania, wersje Protona).
+- Solidny mechanizm startowy dla mniej zaawansowanych użytkowników.
+- **NOWOŚĆ:** Automatyczna ekstrakcja wysokiej jakości ikon bezpośrednio z plików EXE gier.
 
-## Screenshots
-| Factory | Export | Installer |
+## Zrzuty ekranu
+| Fabryka (Factory) | Eksport | Instalator |
 |---|---|---|
 | ![Factory](docs/assets/Factory.png) | ![Export](docs/assets/export.png) | ![Installer](docs/assets/installer.png) |
 
-## Core Features
-| Feature | What it gives you |
+## Kluczowe Funkcje
+| Funkcja | Co zyskujesz |
 |---|---|
-| Intelligent prefix scanning | Reuses and scores existing Wine/Lutris/Steam prefixes before creating new ones |
-| Learned profiles | Automatically stores successful requirements/proton/prefix hints per game |
-| Portable export | Produces runnable package with `play.sh`, `play_auto.sh`, `play_safe.sh` |
-| Safe fallback | Auto-switches to safe mode when renderer/runtime issues are detected |
-| Isolated runtime | Save/runtime data stays inside package (`./pfx`, `./r2p_userdata`) |
-| Unified `.sh` installer | Optional self-extracting installer with desktop/menu integration |
-| Update checker | Startup check against `version.txt` with in-app banner to latest release |
+| Inteligentne skanowanie prefiksów | Wykorzystuje i ocenia istniejące prefiksy Wine/Lutris/Steam, zamiast budować wszystko od zera |
+| Wyuczone profile | Automatycznie zapamiętuje udane konfiguracje (biblioteki, wersje Protona) dla każdej gry |
+| Eksport Portable | Tworzy paczkę z `play.sh`, `play_auto.sh` i `play_safe.sh` |
+| Bezpieczny Fallback | Automatyczne przełączanie na tryb bezpieczny w przypadku wykrycia problemów z renderowaniem |
+| Izolowane środowisko | Zapisy i dane gry zostają wewnątrz paczki (`./pfx`, `./r2p_userdata`) |
+| Ujednolicony instalator `.sh` | Opcjonalny samorozpakowujący się instalator z integracją z pulpitem i menu |
+| **Integracja Ikon** | Ikona gry pojawia się automatycznie w UI Fabryki i skrótach pulpitowych |
 
-## Launch Behavior (User-Friendly)
-- `play_auto.sh` is the recommended entrypoint.
-- If normal launch fails, auto mode retries with safe mode.
-- System checks explain missing dependencies instead of failing silently.
+## Zachowanie przy uruchamianiu
+- `play_auto.sh` to zalecany sposób uruchamiania.
+- Jeśli standardowy start zawiedzie, tryb auto ponawia próbę w trybie bezpiecznym (Safe Mode).
+- Sprawdzenia systemowe wyjaśniają brakujące zależności, zamiast kończyć się cichym błędem.
 
-## Project Structure
+## Struktura Projektu
 ```text
 src/
-  main.rs                # App shell, UI state, orchestration
-  engine.rs              # Production pipeline
-  installer.rs           # Export, launchers, installer generation
-  database.rs            # SQLite + learned profiles JSON
-  community_sync.rs      # Optional GitHub sync + retry queue
-  ui/                    # Iced UI tabs and theme
-cloud/
-  games.sample.json      # Cloud-style game knowledge sample
-presets.json             # Preset knowledge base
+  main.rs                # Powłoka aplikacji, stan UI, orkiestracja
+  engine.rs              # Pipeline produkcyjny
+  installer/             # Eksport, skrypty startowe, generowanie instalatora (SFX)
+  detector.rs            # Detekcja gier i ekstrakcja ikon (Pelite + Image)
+  database.rs            # SQLite + wyuczone profile JSON
+  community_sync.rs      # Opcjonalna synchronizacja z GitHub
+  ui/                    # Interfejs Iced
 ```
 
-## Quick Start
+## Szybki Start
 ```bash
 git clone https://github.com/KrystianG06/Repack2Linux.git
 cd Repack2Linux
 cargo run --bin repack2proton-rs
 ```
 
-## Build Release Asset (for end users)
+## Budowanie wersji stabilnej (Release)
 ```bash
 chmod +x build_release.sh
 ./build_release.sh
 ```
 
-This creates:
-- `dist/Repack2Linux-v1.2.0-<target>.tar.gz`
-- `dist/Repack2Linux-v1.2.0-<target>.sha256`
+Tworzy:
+- `dist/Repack2Linux-v1.3.0-<target>.tar.gz`
+- `dist/Repack2Linux-v1.3.0-<target>.sha256`
 
-Release package includes both runtime binaries:
-- `Repack2Linux`
-- `installer_gui`
+## Typowy Workflow
+1. Wybierz folder źródłowy z grą (instalator lub wypakowana gra).
+2. R2L wykryje i zaproponuje najlepszy profil/ustawienia.
+3. Uruchom produkcję (testowe uruchomienie bezpośrednio z aplikacji).
+4. Eksportuj gotową paczkę Portable (lub instalator SFX).
+5. Uruchamiaj grę za pomocą `play_auto.sh`.
 
-So `Unified SFX Installer (.sh)` export works in release runtime too (without local Cargo project sources).
-
-After extracting the archive, install app icon/menu entry:
-```bash
-cd Repack2Linux-<target>
-./install_desktop_icon.sh
-```
-
-## Build AppImage (single-file distribution)
-```bash
-chmod +x build_appimage.sh
-./build_appimage.sh
-```
-
-This creates:
-- `dist/Repack2Linux-v1.2.0-<arch>.AppImage`
-- `dist/Repack2Linux-v1.2.0-<arch>.AppImage.sha256`
-
-> Note: In AppImage/runtime mode, `Unified SFX Installer (.sh)` export is intentionally disabled.
-> Use `Portable` export in AppImage, or run developer build from repository to generate SFX installer.
-
-## Typical Workflow
-1. Select game source folder/ISO.
-2. Let R2L detect and apply best profile/preset.
-3. Run production (test launch from project workspace).
-4. Export full portable package (or unified installer).
-5. Distribute and run with `play_auto.sh`.
-
-## Pipeline (At a Glance)
-```text
-Source -> Detect -> Learn/Preset Match -> Prefix Build/Reuse
-       -> Test Launch -> Export (Portable / .sh)
-       -> Auto Launcher (play_auto.sh + safe fallback)
-```
-
-## Community Sync (Optional)
-R2L can push learned updates to GitHub presets.
-
-Prefer new env names (legacy fallback is supported):
-- `R2L_GITHUB_TOKEN`
-- `R2L_GITHUB_REPO`
-- `R2L_GITHUB_BRANCH`
-- `R2L_COMMUNITY_DB_ROOT`
-
-## Documentation
-- Progress log: [`PROGRESS.md`](./PROGRESS.md)
-- Full project overview: [`PROJECT_OVERVIEW.md`](./PROJECT_OVERVIEW.md)
-- Landing page copy: [`LANDING_COPY.md`](./LANDING_COPY.md)
-
-## Roadmap (Short)
-- Delta-sync for large game updates.
-- Steam Deck focused presets.
-- Public release cleanup (repo rename, screenshots, final docs pass).
+## Dokumentacja (Pozostałe pliki)
+- Raport postępu: [`PROGRESS.md`](./PROGRESS.md)
+- Przegląd projektu: [`PROJECT_OVERVIEW.md`](./PROJECT_OVERVIEW.md)
+- Teksty promocyjne: [`LANDING_COPY.md`](./LANDING_COPY.md)
 
 ## FAQ
-**Where are save files?**  
-Inside the package: `./r2p_userdata` (typically `./r2p_userdata/Local`).
+**Gdzie są zapisy gier?**  
+Wewnątrz paczki: `./r2p_userdata` (zazwyczaj podfolder `Local`).
 
-**Which launcher should users run?**  
-`./play_auto.sh` (recommended).
+**Który skrypt uruchamiać?**  
+Zawsze zalecamy `./play_auto.sh`.
 
-**Can I add app shortcut/icon from settings?**  
-Yes. In `Configuration`, use `ADD SHORTCUT` to install/update menu + desktop entry with R2L icon.
+**Jak dodać skrót do gry?**  
+W zakładce `Konfiguracja` użyj przycisku `DODAJ SKRÓT`.
 
-**What if a game has black screen?**  
-Auto mode retries safe fallback automatically; manual fallback is `./play_safe.sh`.
+**Co jeśli gra ma czarny ekran?**  
+Tryb auto sam spróbuje trybu bezpiecznego. Możesz też ręcznie uruchomić `./play_safe.sh`.
 
-**Does R2L require cloud account/Steam login to work?**  
-No. Core workflow is local/offline-first.
-
-## License
-Currently project-internal. Public license selection planned before release.
+## Licencja
+Projekt obecnie wewnętrzny. Wybór licencji publicznej planowany przed oficjalnym wydaniem.

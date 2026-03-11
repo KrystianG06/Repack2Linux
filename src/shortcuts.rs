@@ -23,31 +23,40 @@ impl ShortcutManager {
         let clean_name = game_name.replace(" ", "_").to_lowercase();
         let desktop_file_path = applications_dir.join(format!("r2p_{}.desktop", clean_name));
 
-        // Budowanie komendy Exec
-        let mut env_vars = format!("WINEPREFIX=\"{}\" ", prefix_path);
+        // Budowanie komendy Exec przy użyciu 'env' (bardziej stabilne niż bash -c)
+        let exe_path_quoted = if exe_path.contains(' ') { format!("\"{}\"", exe_path) } else { exe_path.to_string() };
+        let prefix_path_quoted = if prefix_path.contains(' ') { format!("\"{}\"", prefix_path) } else { prefix_path.to_string() };
+        
+        let mut full_exec = format!("env WINEPREFIX={} ", prefix_path_quoted);
         if mangohud {
-            env_vars.push_str("MANGOHUD=1 ");
+            full_exec.push_str("MANGOHUD=1 ");
         }
 
-        let mut command = format!("wine \"{}\"", exe_path);
+        let mut command = format!("wine {}", exe_path_quoted);
         if gamemode {
             command = format!("gamemoderun {}", command);
         }
-
-        let full_exec = format!("bash -c '{} {}'", env_vars, command);
+        full_exec.push_str(&command);
 
         let icon = icon_path.unwrap_or("applications-games");
+
+        let path_str = std::path::Path::new(exe_path)
+            .parent()
+            .map(|p| p.to_string_lossy().to_string())
+            .unwrap_or_default();
 
         let content = format!(
             "[Desktop Entry]\n\
             Type=Application\n\
             Name={}\n\
-            Comment=Installed via Repack2Linux Factory\n\
+            Comment=Zainstalowano przez Repack2Linux Factory\n\
             Exec={}\n\
+            Path={}\n\
             Icon={}\n\
             Terminal=false\n\
-            Categories=Game;\n",
-            game_name, full_exec, icon
+            Categories=Game;\n\
+            StartupNotify=true\n",
+            game_name, full_exec, path_str, icon
         );
 
         let mut file = fs::File::create(&desktop_file_path).map_err(|e| e.to_string())?;

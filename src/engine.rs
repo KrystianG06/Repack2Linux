@@ -1,4 +1,5 @@
-use crate::{dependencies, detector, installer, presets::GamePresets, shortcuts, Message};
+use crate::{dependencies, detector, installer, presets::GamePresets, shortcuts};
+use crate::app::Message;
 use async_stream::stream;
 use futures_core::stream::Stream;
 use std::path::PathBuf;
@@ -60,29 +61,60 @@ impl Engine {
             let mut copied_count = 0;
             let mut last_reported_p = 0.0;
 
-            for file in files_to_copy {
+            // Najpierw tworzymy wszystkie katalogi (sekwencyjnie, bo to szybkie i zapobiega race conditions)
+            let mut dirs_to_create = std::collections::HashSet::new();
+            for file in &files_to_copy {
                 if let Ok(rel_path) = file.strip_prefix(&source_path) {
                     let target_path = project_dir.join(rel_path);
                     if let Some(parent) = target_path.parent() {
-                        if let Err(e) = tokio::fs::create_dir_all(parent).await {
-                            yield Message::LogAppended(format!("[ERROR] FS Failure: {}", e));
-                            yield Message::ProductionFinished(Err(e.to_string()));
-                            return;
-                        }
+                        dirs_to_create.insert(parent.to_path_buf());
                     }
+                }
+            }
+            for dir in dirs_to_create {
+                let _ = tokio::fs::create_dir_all(dir).await;
+            }
 
-                    if let Err(e) = tokio::fs::copy(&file, &target_path).await {
-                        yield Message::LogAppended(format!("[ERROR] Copy failed for {:?}: {}", file.file_name().unwrap_or_default(), e));
+            // Równoległe kopiowanie plików
+            use futures_util::stream::{FuturesUnordered, StreamExt};
+            let mut workers = FuturesUnordered::new();
+            let max_concurrent_copies = 12;
+            let mut file_iter = files_to_copy.into_iter();
+
+            loop {
+                while workers.len() < max_concurrent_copies {
+                    if let Some(file) = file_iter.next() {
+                        let source_file = file.clone();
+                        let rel_path = match file.strip_prefix(&source_path) {
+                            Ok(p) => p.to_path_buf(),
+                            Err(_) => continue, // Powinno być niemożliwe, ale bezpieczniej pominąć
+                        };
+                        let target_file = project_dir.join(rel_path);
+                        
+                        workers.push(async move {
+                            tokio::fs::copy(source_file, target_file).await
+                        });
+                    } else {
+                        break;
+                    }
+                }
+
+                if workers.is_empty() {
+                    break;
+                }
+
+                if let Some(result) = workers.next().await {
+                    if let Err(e) = result {
+                        yield Message::LogAppended(format!("[ERROR] Copy failed: {}", e));
                         yield Message::ProductionFinished(Err(format!("Copy failed: {}", e)));
                         return;
                     }
-
                     copied_count += 1;
                     let current_p = (copied_count as f32 / total_files as f32) * 0.4;
                     if current_p - last_reported_p >= 0.01 || copied_count == total_files {
                         yield Message::ProgressUpdated(0.01 + current_p);
                         last_reported_p = current_p;
-                        if copied_count % 1000 == 0 {
+                        if copied_count % 1000 == 0 || copied_count == total_files {
                             yield Message::LogAppended(format!("[IMPORT] Progress: {}/{} files...", copied_count, total_files));
                         }
                     }
@@ -170,12 +202,21 @@ impl Engine {
                 // EKSTRAKCJA IKONY
                 yield Message::LogAppended("[ASSETS] Looking for game icon...".into());
                 let icon_path = install_dir.join("icon.png");
-                let _ = detector::Detector::extract_icon(&install_dir, &icon_path);
+                let icon_for_shortcut = if detector::Detector::extract_icon(&final_exe, &icon_path) {
+                    Some(icon_path.to_string_lossy().to_string())
+                } else {
+                    None
+                };
 
                 yield Message::ProgressUpdated(0.95);
 
                 if let Err(e) = shortcuts::ShortcutManager::create_desktop_shortcut(
-                    &game_name, &final_exe.to_string_lossy(), &inst.prefix_path.to_string_lossy(), None, options.mangohud, options.gamemode
+                    &game_name, 
+                    &final_exe.to_string_lossy(), 
+                    &inst.prefix_path.to_string_lossy(), 
+                    icon_for_shortcut.as_deref(), 
+                    options.mangohud, 
+                    options.gamemode
                 ) {
                     yield Message::LogAppended(format!("[WARN] Shortcut creation failed: {}", e));
                 }

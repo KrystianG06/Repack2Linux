@@ -9,7 +9,7 @@ APP_NAME="Repack2Linux"
 HOST_TRIPLE="$(rustc -vV | awk '/host:/ {print $2}')"
 OUT_DIR="$ROOT_DIR/dist"
 STAGE_DIR="$OUT_DIR/${APP_NAME}-${HOST_TRIPLE}"
-VERSION_TAG="${VERSION_TAG:-v1.2.0}"
+VERSION_TAG="${VERSION_TAG:-v1.3.0}"
 
 echo "[R2L] Building release binaries: $BIN_NAME + installer_gui"
 cargo build --release --bin "$BIN_NAME"

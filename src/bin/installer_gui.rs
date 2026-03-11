@@ -276,13 +276,19 @@ impl InstallerGui {
                     } else {
                         play_sh.clone()
                     };
-                    let icon_path = target.join("r2p-icon.svg");
-                    let _ = tokio::fs::write(&icon_path, R2P_ICON_SVG).await;
                     let game_icon = target.join("icon.png");
+                    let brand_icon_path = target.join("r2l_brand.svg");
+                    
                     let icon_for_desktop = if game_icon.exists() {
+                        // HIGHLANDER MODE: Jeśli mamy ikonę gry, usuwamy logo marki, żeby system nie zgłupiał
+                        if brand_icon_path.exists() {
+                            let _ = tokio::fs::remove_file(&brand_icon_path).await;
+                        }
                         game_icon
                     } else {
-                        icon_path.clone()
+                        // Zapisujemy logo tylko wtedy, gdy NIE MA ikony gry
+                        let _ = tokio::fs::write(&brand_icon_path, R2P_ICON_SVG).await;
+                        brand_icon_path
                     };
                     let desktop_content = format!(
                         "[Desktop Entry]\nVersion=1.0\nType=Application\nName={}\nExec=\"{}\"\nPath=\"{}\"\nIcon={}\nTerminal=false\nCategories=Game;\nStartupNotify=true\n",

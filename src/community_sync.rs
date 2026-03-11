@@ -551,9 +551,11 @@ async fn push_repo_files_to_github(repo_root: &Path) -> Result<String, String> {
 
     let presets_path = repo_root.join("presets.json");
     let cloud_path = repo_root.join("cloud").join("games.sample.json");
-    let presets_content = std::fs::read_to_string(&presets_path)
+    let presets_content = tokio::fs::read_to_string(&presets_path)
+        .await
         .map_err(|e| format!("Failed to re-read {}: {}", presets_path.display(), e))?;
-    let cloud_content = std::fs::read_to_string(&cloud_path)
+    let cloud_content = tokio::fs::read_to_string(&cloud_path)
+        .await
         .map_err(|e| format!("Failed to re-read {}: {}", cloud_path.display(), e))?;
 
     let message = format!(
@@ -581,7 +583,7 @@ async fn push_repo_files_to_github(repo_root: &Path) -> Result<String, String> {
             return Err("Conflict but remote presets.json not found".to_string());
         };
         let merged = merge_presets_json(&presets_content, &remote_content)?;
-        let _ = std::fs::write(&presets_path, &merged);
+        let _ = tokio::fs::write(&presets_path, &merged).await;
         github_put_file(
             &client,
             &token,
@@ -616,7 +618,7 @@ async fn push_repo_files_to_github(repo_root: &Path) -> Result<String, String> {
             return Err("Conflict but remote cloud/games.sample.json not found".to_string());
         };
         let merged = merge_cloud_json(&cloud_content, &remote_content)?;
-        let _ = std::fs::write(&cloud_path, &merged);
+        let _ = tokio::fs::write(&cloud_path, &merged).await;
         github_put_file(
             &client,
             &token,

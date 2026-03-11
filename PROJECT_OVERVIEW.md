@@ -1,4 +1,4 @@
-# R2P (Repack2Proton) - Project Overview
+# R2L (Repack2Linux) - Przegląd Projektu
 
 ## Executive Summary
 R2P to aplikacja desktopowa dla Linuxa, która automatyzuje budowę przenośnych paczek gier Windows (prefix + launcher + opcjonalny installer `.sh`).  
@@ -63,9 +63,10 @@ R2P może synchronizować profile do wspólnego repozytorium:
 Tryby eksportu:
 - portable folder,
 - installer `.sh`,
+- inteligentna ekstrakcja ikon (PNG, brak artefaktów),
 - helper tworzenia ikon/skrótów desktop/menu po instalacji.
 
-**Efekt:** gotowy artefakt do uruchomienia bez ponownego konfigurowania.
+**Efekt:** gotowy artefakt do uruchomienia bez ponownego konfigurowania, z profesjonalnym wyglądem w systemie.
 
 ## Workflow Produkcji Gry (End-to-End)
 

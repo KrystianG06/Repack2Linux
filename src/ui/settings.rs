@@ -1,6 +1,6 @@
 use crate::ui::common::{font_bold, info_block, panel_card};
-use crate::ui::theme::{ACCENT_CYAN, ACCENT_RED, TEXT_DIM};
-use crate::{Language, Message, RepackApp};
+use crate::ui::theme::{primary_button_style, ACCENT_BLUE, ACCENT_RED, TEXT_DIM};
+use crate::app::{Language, Message, RepackApp};
 use iced::widget::{button, checkbox, column, pick_list, row, text, Space};
 use iced::{Color, Element, Length};
 
@@ -15,7 +15,7 @@ pub fn view_settings(app: &RepackApp) -> Element<'_, Message> {
     let queue_color = if app.community_queue_pending {
         ACCENT_RED
     } else {
-        ACCENT_CYAN
+        ACCENT_BLUE
     };
     let last_retry = app
         .community_last_retry_at
@@ -30,7 +30,7 @@ pub fn view_settings(app: &RepackApp) -> Element<'_, Message> {
         .as_deref()
         .unwrap_or(app.tr("community_not_found"));
 
-    column![
+    let content = column![
         row![
             panel_card(
                 app.tr("engine_modules"),
@@ -97,13 +97,13 @@ pub fn view_settings(app: &RepackApp) -> Element<'_, Message> {
                         .color(TEXT_DIM),
                     button(text(app.tr("settings_add_shortcut_btn")).size(11))
                         .on_press(Message::InstallAppShortcutPressed)
-                        .style(|t, s| crate::ui::theme::brand_button_style(t, s, true))
+                        .style(|t, s| primary_button_style(t, s))
                         .width(Length::Fill),
                     Space::with_height(20),
                     text(app.tr("cloud_knowledge")).size(12).font(font_bold()),
                     button(text(app.tr("sync_now")).size(11))
                         .on_press(Message::SyncCloudDatabase)
-                        .style(|t, s| crate::ui::theme::brand_button_style(t, s, true))
+                        .style(|t, s| primary_button_style(t, s))
                         .width(Length::Fill),
                     Space::with_height(10),
                     text(app.tr("gpu_vendor")).size(11).color(TEXT_DIM),
@@ -157,7 +157,7 @@ pub fn view_settings(app: &RepackApp) -> Element<'_, Message> {
                     info_block(app.tr("repo_root"), repo_root),
                     button(text(app.tr("retry_queue_now")).size(11))
                         .on_press(Message::ProcessCommunityQueue)
-                        .style(|t, s| crate::ui::theme::brand_button_style(t, s, true))
+                        .style(|t, s| primary_button_style(t, s))
                         .width(Length::Fill),
                 ]
                 .spacing(10),
@@ -166,7 +166,10 @@ pub fn view_settings(app: &RepackApp) -> Element<'_, Message> {
         ]
         .spacing(18),
     ]
-    .spacing(24)
-    .padding(32)
-    .into()
+    .spacing(24);
+
+    crate::ui::theme::glass_container(content)
+        .width(Length::Fill)
+        .height(Length::Fill)
+        .into()
 }
