@@ -1,1 +1,1 @@
-# Repack2Proton
+# Repack2Linux

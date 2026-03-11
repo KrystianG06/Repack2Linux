@@ -1,5 +1,5 @@
 [package]
-name = "repack2proton-rs"
+name = "repack2linux-rs"
 version = "1.3.0"
 edition = "2021"
 # build = "build.rs" # Wyłączone tymczasowo
