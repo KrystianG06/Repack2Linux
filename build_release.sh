@@ -26,8 +26,8 @@ chmod +x "$STAGE_DIR/installer_gui"
 cp README.md "$STAGE_DIR/README.md"
 cp PROGRESS.md "$STAGE_DIR/PROGRESS.md"
 
-if [[ -f "Repack2Proton/LICENSE" ]]; then
-  cp "Repack2Proton/LICENSE" "$STAGE_DIR/LICENSE"
+if [[ -f "Repack2Linux/LICENSE" ]]; then
+  cp "Repack2Linux/LICENSE" "$STAGE_DIR/LICENSE"
 fi
 
 cat > "$STAGE_DIR/repack2linux.svg" << 'EOF'
